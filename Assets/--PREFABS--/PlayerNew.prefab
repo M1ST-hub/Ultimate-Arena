@@ -13758,6 +13758,7 @@ GameObject:
   - component: {fileID: 6271167614807760493}
   - component: {fileID: 8510779259928103558}
   - component: {fileID: 2426597963149463475}
+  - component: {fileID: -4862130352919718321}
   m_Layer: 0
   m_Name: PlayerNew
   m_TagString: Player
@@ -13850,7 +13851,10 @@ MonoBehaviour:
   scoreboard: {fileID: 3866320041080057294, guid: 07c836aca1d4fb14cabc4df8e1babe69, type: 3}
   walkSpeed: 7
   sprintSpeed: 10
-  groundDrag: 5
+  slideSpeed: 30
+  speedIncreaseMultiplier: 1.5
+  slopeIncreaseMultiplier: 2.5
+  groundDrag: 4
   jumpForce: 12
   jumpCooldown: 0.25
   airMultiplier: 0.4
@@ -13866,6 +13870,7 @@ MonoBehaviour:
   maxSlopeAngle: 40
   orientation: {fileID: 7128975052659623147}
   state: 0
+  sliding: 0
 --- !u!114 &6271167614807760493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13931,3 +13936,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f3b9ed3e6c4ad48a401bea707cecf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4862130352919718321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7581817279422743312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 697b0229ff0b9ec47a05414b3f47ebef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientation: {fileID: 7128975052659623147}
+  playerObj: {fileID: 3117494613469633941}
+  maxSlideTime: 0.75
+  slideForce: 200
+  slideYScale: 0.5
+  slideKey: 99
