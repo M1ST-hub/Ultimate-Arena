@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerController : NetworkBehaviour
 {
     public GameObject scoreboard;
+    public GameObject pause;
 
     [Header("Movement")]
     private float moveSpeed;
@@ -86,6 +87,7 @@ public class PlayerController : NetworkBehaviour
 
         startYScale = transform.localScale.y;
         scoreboard = GameObject.FindWithTag("scoreboard");
+        pause = GameObject.FindWithTag("Pause");
     }
 
     private void Update()
@@ -146,6 +148,7 @@ public class PlayerController : NetworkBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
 
+        //scoreboard
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             scoreboard.transform.GetChild(0).gameObject.SetActive(true);
@@ -153,6 +156,12 @@ public class PlayerController : NetworkBehaviour
         else if (Input.GetKeyUp(KeyCode.Tab))
         {
             scoreboard.transform.GetChild(0).gameObject.SetActive(false);
+        }
+
+        //pause menu
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pause.transform.GetChild(0).gameObject.SetActive(true);
         }
 
     }
