@@ -7,6 +7,8 @@ public class Timer : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] float remainingTime;
+
+    public GameManager gm;
    
 
 
@@ -17,8 +19,11 @@ public class Timer : MonoBehaviour
         if (remainingTime > 0)
             remainingTime -= Time.deltaTime;
         //stop timer at 0
-        else if (remainingTime < 0)
+        else if (remainingTime <= 0)
+        {
             remainingTime = 0;
+        }
+            
 
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);
