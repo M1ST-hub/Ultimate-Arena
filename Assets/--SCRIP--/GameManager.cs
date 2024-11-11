@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
-    public GameObject[] players;
+    public  List <GameObject> players;
+    public GameObject[] spawnPoints;
 
     void Start()
     {
-        foreach (var player in players)
-        {
-            object obj = player.gameObject;
-        }
+        NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
+
     }
 
     void Update()
@@ -19,7 +19,33 @@ public class GameManager : MonoBehaviour
         
     }
 
+    private void PlayerJoined(ulong clientId)
+    {
+        foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client.ClientId == clientId)
+            {
+                players.Add(client.PlayerObject.gameObject);
+            }
+        }
+
+       // NetworkManager.ConnectedClientsIds;
+    }
+    
     private void FirstTagger()
+    {
+        
+    }
+
+    public void GameStart()
+    {
+        foreach (GameObject player in players)
+        {
+            player.transform.position = spawnPoints[0].transform.position;
+        }
+    }
+
+    private void SpawnPoints()
     {
         
     }

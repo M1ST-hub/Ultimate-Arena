@@ -9,7 +9,8 @@ public class Timer : MonoBehaviour
     [SerializeField] float remainingTime;
 
     public GameManager gm;
-   
+    public bool gameStart;
+    public bool gameEnd;
 
 
     // Update is called once per frame
@@ -22,6 +23,13 @@ public class Timer : MonoBehaviour
         else if (remainingTime <= 0)
         {
             remainingTime = 0;
+
+            if (gameStart == false)
+            {
+                gameStart = true;
+                gm.GameStart();
+            }
+
         }
             
 
