@@ -14,7 +14,7 @@ public class GameManager : NetworkBehaviour
 
     }
 
-    void Update()
+    void Update() 
     {
         
     }
@@ -41,7 +41,7 @@ public class GameManager : NetworkBehaviour
     {
         foreach (GameObject player in players)
         {
-            player.transform.position = spawnPoints[0].transform.position;
+            player.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
     }
 
