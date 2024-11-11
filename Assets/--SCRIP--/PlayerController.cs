@@ -7,12 +7,15 @@ using UnityEngine;
 public class PlayerController : NetworkBehaviour
 {
     public GameObject scoreboard;
+    public GameObject pause;
 
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
     public float slideSpeed;
+    public float wallrunSpeed;
+    public float climbSpeed;
 
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
@@ -42,7 +45,7 @@ public class PlayerController : NetworkBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
@@ -63,12 +66,17 @@ public class PlayerController : NetworkBehaviour
     {
         walking,
         sprinting,
+        wallrunning,
+        climbing,
         crouching,
         sliding,
         air
     }
 
     public bool sliding;
+    public bool crouching;
+    public bool wallrunning;
+    public bool climbing;
 
     // Start is called before the first frame update
     void Start()
@@ -79,6 +87,7 @@ public class PlayerController : NetworkBehaviour
 
         startYScale = transform.localScale.y;
         scoreboard = GameObject.FindWithTag("scoreboard");
+        pause = GameObject.FindWithTag("Pause");
     }
 
     private void Update()
@@ -125,6 +134,7 @@ public class PlayerController : NetworkBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
 
+
         //start crouch
         if (Input.GetKeyDown(crouchKey))
         {
@@ -138,6 +148,7 @@ public class PlayerController : NetworkBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
 
+        //scoreboard
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             scoreboard.transform.GetChild(0).gameObject.SetActive(true);
@@ -147,12 +158,32 @@ public class PlayerController : NetworkBehaviour
             scoreboard.transform.GetChild(0).gameObject.SetActive(false);
         }
 
+        //pause menu
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pause.transform.GetChild(0).gameObject.SetActive(true);
+        }
+
     }
 
     private void StateHandler()
     {
+        //Mode - Climbing
+        if (climbing)
+        {
+            state = MovementState.climbing;
+            desiredMoveSpeed = climbSpeed;
+        }
+
+        // Mode Wallrunning
+        else if (wallrunning)
+        {
+            state = MovementState.wallrunning;
+            desiredMoveSpeed = wallrunSpeed;
+        }
+
         // Mode - Sliding
-        if (sliding)
+        else if (sliding)
         {
             state = MovementState.sliding;
 
@@ -191,7 +222,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         //check if desiredMoveSpeed has changed drastically
-        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
+        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 8f && moveSpeed != 0)
         {
             StopAllCoroutines();
             StartCoroutine(SmoothlyLerpMoveSpeed());
@@ -254,7 +285,7 @@ public class PlayerController : NetworkBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
         //no gravity whilst on slope
-        rb.useGravity = !OnSlope();
+        if (!wallrunning) rb.useGravity = !OnSlope();
     }
 
     private void SpeedControl()
