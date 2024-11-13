@@ -45,10 +45,11 @@ public class Climbing : MonoBehaviour
             if (climbTimer < 0) StopClimbing();
 
             // State 3 - None
-            else
-            {
-                if (climbing) StopClimbing();
-            }
+            
+        }
+        else if (climbing)
+        {
+           StopClimbing();
         }
     }
 

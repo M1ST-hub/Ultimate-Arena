@@ -7,6 +7,7 @@ public class GameManager : NetworkBehaviour
 {
     public  List <GameObject> players;
     public GameObject[] spawnPoints;
+    public GameObject gameTimer;
 
     void Start()
     {
@@ -31,10 +32,11 @@ public class GameManager : NetworkBehaviour
 
        // NetworkManager.ConnectedClientsIds;
     }
-    
-    private void FirstTagger()
+
+    [Rpc(SendTo.Everyone)]
+    private void FirstTaggerRpc()
     {
-        
+        players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
     }
 
     public void GameStart()
@@ -43,10 +45,9 @@ public class GameManager : NetworkBehaviour
         {
             player.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
-    }
 
-    private void SpawnPoints()
-    {
-        
+        gameTimer.SetActive(true);
+
+        FirstTaggerRpc();
     }
 }

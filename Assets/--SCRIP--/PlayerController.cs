@@ -8,6 +8,7 @@ public class PlayerController : NetworkBehaviour
 {
     public GameObject scoreboard;
     public GameObject pause;
+    public GameObject itArrow;
 
     [Header("Movement")]
     private float moveSpeed;
@@ -175,7 +176,7 @@ public class PlayerController : NetworkBehaviour
             desiredMoveSpeed = climbSpeed;
         }
 
-        // Mode Wallrunning
+        // Mode - Wallrunning
         else if (wallrunning)
         {
             state = MovementState.wallrunning;
