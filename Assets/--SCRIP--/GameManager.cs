@@ -8,11 +8,11 @@ public class GameManager : NetworkBehaviour
     public  List <GameObject> players;
     public GameObject[] spawnPoints;
     public GameObject gameTimer;
+    public GameObject preGameTimer;
 
     void Start()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
-
     }
 
     void Update() 
@@ -34,12 +34,7 @@ public class GameManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
-    private void FirstTaggerRpc()
-    {
-        players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
-    }
-
-    public void GameStart()
+    public void GameStartRpc()
     {
         foreach (GameObject player in players)
         {
@@ -47,7 +42,16 @@ public class GameManager : NetworkBehaviour
         }
 
         gameTimer.SetActive(true);
+        preGameTimer.SetActive(false);
 
         FirstTaggerRpc();
     }
+
+    [Rpc(SendTo.Everyone)]
+    private void FirstTaggerRpc()
+    {
+        players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
+    }
+
+    
 }

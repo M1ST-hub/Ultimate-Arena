@@ -2625,8 +2625,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  sensX: 300
-  sensY: 250
+  sensX: 600
+  sensY: 500
   orientation: {fileID: 7128975052659623147}
   camHolder: {fileID: 6980601462871575918}
 --- !u!1 &5887336325247459643
@@ -16393,7 +16393,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   scoreboard: {fileID: 3866320041080057294, guid: 07c836aca1d4fb14cabc4df8e1babe69, type: 3}
-  pause: {fileID: 0}
   itArrow: {fileID: 1283514992901674031}
   walkSpeed: 7
   sprintSpeed: 9

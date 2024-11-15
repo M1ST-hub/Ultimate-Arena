@@ -20,14 +20,14 @@ public class Timer : MonoBehaviour
         if (remainingTime > 0)
             remainingTime -= Time.deltaTime;
         //stop timer at 0
-        else if (remainingTime <= 0)
+        else if (remainingTime < 1)
         {
             remainingTime = 0;
 
             if (gameStart == false)
             {
                 gameStart = true;
-                gm.GameStart();
+                gm.GameStartRpc();
             }
 
         }

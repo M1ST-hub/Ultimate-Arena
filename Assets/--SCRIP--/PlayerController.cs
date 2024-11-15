@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerController : NetworkBehaviour
 {
     public GameObject scoreboard;
-    public GameObject pause;
+    private GameObject pause;
     public GameObject itArrow;
 
     [Header("Movement")]
@@ -82,13 +82,16 @@ public class PlayerController : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-        readyToJump = true;
+        if (IsOwner)
+        {
+            rb = GetComponent<Rigidbody>();
+            rb.freezeRotation = true;
+            readyToJump = true;
 
-        startYScale = transform.localScale.y;
-        scoreboard = GameObject.FindWithTag("scoreboard");
-        pause = GameObject.FindWithTag("Pause");
+            startYScale = transform.localScale.y;
+            scoreboard = GameObject.FindWithTag("scoreboard");
+            pause = GameObject.FindWithTag("Pause");
+        }
     }
 
     private void Update()
@@ -163,77 +166,83 @@ public class PlayerController : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pause.transform.GetChild(0).gameObject.SetActive(true);
+
+            Cursor.lockState = CursorLockMode.None;
         }
 
     }
 
     private void StateHandler()
     {
-        //Mode - Climbing
-        if (climbing)
+        if (IsOwner)
         {
-            state = MovementState.climbing;
-            desiredMoveSpeed = climbSpeed;
-        }
+            //Mode - Climbing
+            if (climbing)
+            {
+                state = MovementState.climbing;
+                desiredMoveSpeed = climbSpeed;
+            }
 
-        // Mode - Wallrunning
-        else if (wallrunning)
-        {
-            state = MovementState.wallrunning;
-            desiredMoveSpeed = wallrunSpeed;
-        }
+            // Mode - Wallrunning
+            else if (wallrunning)
+            {
+                state = MovementState.wallrunning;
+                desiredMoveSpeed = wallrunSpeed;
+            }
 
-        // Mode - Sliding
-        else if (sliding)
-        {
-            state = MovementState.sliding;
+            // Mode - Sliding
+            else if (sliding)
+            {
+                state = MovementState.sliding;
 
-            if (OnSlope() && rb.linearVelocity.y < 0.1f)
-                desiredMoveSpeed = slideSpeed;
+                if (OnSlope() && rb.linearVelocity.y < 0.1f)
+                    desiredMoveSpeed = slideSpeed;
 
-            else 
+                else
+                    desiredMoveSpeed = sprintSpeed;
+            }
+
+            // Mode - Crouching
+            else if (Input.GetKey(crouchKey))
+            {
+                state = MovementState.crouching;
+                desiredMoveSpeed = crouchSpeed;
+            }
+
+
+            //Mode - Sprinting
+            if (grounded && Input.GetKey(sprintKey))
+            {
+                state = MovementState.sprinting;
                 desiredMoveSpeed = sprintSpeed;
-        }
+            }
 
-        // Mode - Crouching
-        else if (Input.GetKey(crouchKey))
-        {
-            state = MovementState.crouching;
-            desiredMoveSpeed = crouchSpeed;
-        }
+            else if (grounded)
+            {
+                state = MovementState.walking;
+                desiredMoveSpeed = walkSpeed;
+            }
 
+            //Mode - Air
+            else
+            {
+                state = MovementState.air;
+            }
 
-        //Mode - Sprinting
-        if (grounded && Input.GetKey(sprintKey))
-        {
-            state = MovementState.sprinting;
-            desiredMoveSpeed = sprintSpeed;
-        }
+            //check if desiredMoveSpeed has changed drastically
+            if (Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 8f && moveSpeed != 0)
+            {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else
+            {
+                moveSpeed = desiredMoveSpeed;
+            }
 
-        else if (grounded)
-        {
-            state = MovementState.walking;
-            desiredMoveSpeed = walkSpeed;
-        }
+            lastDesiredMoveSpeed = desiredMoveSpeed;
 
-        //Mode - Air
-        else
-        {
-            state = MovementState.air;
         }
-
-        //check if desiredMoveSpeed has changed drastically
-        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 8f && moveSpeed != 0)
-        {
-            StopAllCoroutines();
-            StartCoroutine(SmoothlyLerpMoveSpeed());
-        }
-        else
-        {
-            moveSpeed = desiredMoveSpeed;
-        }
-
-        lastDesiredMoveSpeed = desiredMoveSpeed;
     }
 
     private IEnumerator SmoothlyLerpMoveSpeed()

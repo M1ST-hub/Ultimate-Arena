@@ -23,7 +23,6 @@ public class CameraController : NetworkBehaviour
         if (IsOwner)
         {
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
         else
         {
