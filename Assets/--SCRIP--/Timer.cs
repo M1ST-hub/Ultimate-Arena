@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.Netcode;
 
 public class Timer : MonoBehaviour
 {
@@ -15,6 +16,12 @@ public class Timer : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        CountdownRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void CountdownRpc()
     {
         //countdown timer
         if (remainingTime > 0)
@@ -31,7 +38,7 @@ public class Timer : MonoBehaviour
             }
 
         }
-            
+
 
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);

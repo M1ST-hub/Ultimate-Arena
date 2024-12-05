@@ -20,17 +20,10 @@ public class GameManager : NetworkBehaviour
         
     }
 
-    private void PlayerJoined(ulong clientId)
+    [Rpc(SendTo.Everyone)]
+    private void FirstTaggerRpc()
     {
-        foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
-        {
-            if (client.ClientId == clientId)
-            {
-                players.Add(client.PlayerObject.gameObject);
-            }
-        }
-
-       // NetworkManager.ConnectedClientsIds;
+        players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
     }
 
     [Rpc(SendTo.Everyone)]
@@ -47,10 +40,17 @@ public class GameManager : NetworkBehaviour
         FirstTaggerRpc();
     }
 
-    [Rpc(SendTo.Everyone)]
-    private void FirstTaggerRpc()
+    private void PlayerJoined(ulong clientId)
     {
-        players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
+        foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client.ClientId == clientId)
+            {
+                players.Add(client.PlayerObject.gameObject);
+            }
+        }
+
+       // NetworkManager.ConnectedClientsIds;
     }
 
     

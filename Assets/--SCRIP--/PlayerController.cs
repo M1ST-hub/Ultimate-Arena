@@ -9,6 +9,10 @@ public class PlayerController : NetworkBehaviour
     public GameObject scoreboard;
     private GameObject pause;
     public GameObject itArrow;
+    private Animator anim;
+    public CapsuleCollider capCol;
+    public SkinnedMeshRenderer body;
+    public SkinnedMeshRenderer head;
 
     [Header("Movement")]
     private float moveSpeed;
@@ -85,12 +89,19 @@ public class PlayerController : NetworkBehaviour
         if (IsOwner)
         {
             rb = GetComponent<Rigidbody>();
+            anim = GetComponent<Animator>();
+            capCol = GetComponentInChildren<CapsuleCollider>();
             rb.freezeRotation = true;
             readyToJump = true;
+
+            if (IsLocalPlayer)
+                body.enabled = false;
+                head.enabled = false;
 
             startYScale = transform.localScale.y;
             scoreboard = GameObject.FindWithTag("scoreboard");
             pause = GameObject.FindWithTag("Pause");
+
         }
     }
 
@@ -142,14 +153,22 @@ public class PlayerController : NetworkBehaviour
         //start crouch
         if (Input.GetKeyDown(crouchKey))
         {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            capCol.height = 1.3f;
+            capCol.center = new Vector3(0, -.3f, 0);
+            //transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+
+            anim.SetBool("isCrouching", true);
         }
 
         // stop crouch
         if (Input.GetKeyUp(crouchKey))
         {
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            anim.SetBool("isCrouching", false);
+
+            capCol.height = 2f;
+            capCol.center = new Vector3(0, 0, 0);
         }
 
         //scoreboard
