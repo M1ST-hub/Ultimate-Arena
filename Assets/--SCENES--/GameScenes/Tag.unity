@@ -51918,7 +51918,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 1122347970}
-  remainingTime: 90
+  remainingTime: 30
   gm: {fileID: 810852888}
   gameStart: 0
   gameEnd: 0

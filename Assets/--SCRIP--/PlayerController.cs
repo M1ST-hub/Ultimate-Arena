@@ -1,7 +1,5 @@
-using Unity.Netcode;
-using Unity.VisualScripting;
 using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
@@ -30,6 +28,13 @@ public class PlayerController : NetworkBehaviour
 
     public float groundDrag;
 
+    [Header("Tagging")]
+    public float tagCooldown;
+    bool isTagger;
+    bool readyToTag;
+    bool inRange;
+
+
     [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
@@ -46,6 +51,7 @@ public class PlayerController : NetworkBehaviour
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
+    public KeyCode tagKey = KeyCode.Mouse0;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -96,7 +102,7 @@ public class PlayerController : NetworkBehaviour
 
             if (IsLocalPlayer)
                 body.enabled = false;
-                head.enabled = false;
+            head.enabled = false;
 
             startYScale = transform.localScale.y;
             scoreboard = GameObject.FindWithTag("scoreboard");
@@ -119,6 +125,11 @@ public class PlayerController : NetworkBehaviour
                 rb.linearDamping = groundDrag;
             else
                 rb.linearDamping = 0;
+
+            if (itArrow.activeInHierarchy == true)
+                isTagger = true;
+            else
+                isTagger = false;
         }
 
     }
@@ -358,6 +369,33 @@ public class PlayerController : NetworkBehaviour
         readyToJump = true;
 
         exitingSlope = false;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player") && Input.GetKeyDown(tagKey) && readyToTag && isTagger)
+        {
+            readyToTag = false;
+
+            if (GameManager.Instance.players.Contains(other.gameObject))
+            {
+                TagRpc(GameManager.Instance.players.IndexOf(other.gameObject));
+            }
+
+            Invoke(nameof(ResetTag), tagCooldown);
+        }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void TagRpc(int taggedPlayer)
+    {
+        itArrow.SetActive(false);
+        GameManager.Instance.players[taggedPlayer].GetComponent<PlayerController>().itArrow.SetActive(true);
+    }
+
+    private void ResetTag()
+    {
+        readyToTag = true;
     }
 
     public bool OnSlope()

@@ -9,9 +9,23 @@ public class GameManager : NetworkBehaviour
     public GameObject[] spawnPoints;
     public GameObject gameTimer;
     public GameObject preGameTimer;
+    public static GameManager Instance {  get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     void Start()
     {
+        
         NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
     }
 
