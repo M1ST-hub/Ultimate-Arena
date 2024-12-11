@@ -52,6 +52,8 @@ public class GameManager : NetworkBehaviour
         preGameTimer.SetActive(false);
 
         FirstTaggerRpc();
+
+        Debug.Log("GameStart");
     }
 
     private void PlayerJoined(ulong clientId)

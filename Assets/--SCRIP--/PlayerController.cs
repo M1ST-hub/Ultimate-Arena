@@ -111,12 +111,20 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        //RaycastHit ray;
+        //Physics.Raycast(transform.position, Vector3.down, out ray,  playerHeight * 0.3f + 0.2f, whatIsGround);
+        Gizmos.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y - playerHeight * 0.005f + 0.2f, transform.position.z));
+    }
+
     private void Update()
     {
         if (IsOwner)
         {
             //ground check
-            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.0005f + 0.2f, whatIsGround);
 
             MyInput();
 
@@ -383,7 +391,9 @@ public class PlayerController : NetworkBehaviour
             }
 
             Invoke(nameof(ResetTag), tagCooldown);
+            Debug.Log("Tagged");
         }
+        Debug.Log("INrANGE");   
     }
 
     [Rpc(SendTo.Everyone)]
@@ -391,6 +401,7 @@ public class PlayerController : NetworkBehaviour
     {
         itArrow.SetActive(false);
         GameManager.Instance.players[taggedPlayer].GetComponent<PlayerController>().itArrow.SetActive(true);
+        Debug.Log("Tagged");
     }
 
     private void ResetTag()
