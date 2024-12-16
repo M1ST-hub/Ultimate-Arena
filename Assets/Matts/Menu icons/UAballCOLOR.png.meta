@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 80c799bd16318754fb59c4ba1a131f37
+guid: b8f4f11c6a772f14fb6400a8e6e21519
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -162,7 +162,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UAballCOLR_0
+      name: UAballCOLOR_0
       rect:
         serializedVersion: 2
         x: 0
@@ -177,8 +177,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1a2ebb492b307d542b713eee49d4f390
-      internalID: -789427911
+      spriteID: 0debebf880c05144cbf9d47a459f3847
+      internalID: 1183162208
       vertices: []
       indices: 
       edges: []
@@ -187,7 +187,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 76c4e1c81a0bcf0479e33e99c5880c87
+    spriteID: 9a9c91eb338cbc0428400030bfeb34fa
     internalID: 0
     vertices: []
     indices: 
@@ -197,7 +197,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UAballCOLR_0: -789427911
+      UAballCOLOR_0: 1183162208
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

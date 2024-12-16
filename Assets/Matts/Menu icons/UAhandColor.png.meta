@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 011cba1d4caf815458d11d6647f15c33
+guid: 732b1115df9f1db46a67c326664f3354
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -162,7 +162,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UAhandCOLR_0
+      name: UAhandColor_0
       rect:
         serializedVersion: 2
         x: 0
@@ -177,8 +177,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f2cd48e4940c342439aee36e76ad564e
-      internalID: -1176878438
+      spriteID: 37c84bca9af7f58489c4e53f3657b32a
+      internalID: 58257413
       vertices: []
       indices: 
       edges: []
@@ -187,7 +187,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c0d04ec747f371b4b8aa7697caf41fea
+    spriteID: e71deb71d01f5df4781c48af56247084
     internalID: 0
     vertices: []
     indices: 
@@ -197,7 +197,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UAhandCOLR_0: -1176878438
+      UAhandColor_0: 58257413
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
