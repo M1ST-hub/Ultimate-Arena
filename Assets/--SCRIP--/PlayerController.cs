@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
@@ -381,7 +382,7 @@ public class PlayerController : NetworkBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && Input.GetKeyDown(tagKey) && readyToTag && isTagger)
+        if (other.GetType() == typeof(CapsuleCollider) && other.CompareTag("Player") && Input.GetKeyDown(tagKey) && readyToTag && isTagger)
         {
             readyToTag = false;
 
@@ -399,8 +400,11 @@ public class PlayerController : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void TagRpc(int taggedPlayer)
     {
+        if (IsServer)
+        {
+            TheItArrow.Instance.transform.SetParent(GameManager.Instance.players[taggedPlayer].transform);
+        }
         
-        GameManager.Instance.players[taggedPlayer].GetComponent<PlayerController>().itArrow.SetActive(true);
         Debug.Log("Tagged");
     }
 

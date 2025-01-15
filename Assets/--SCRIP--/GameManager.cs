@@ -41,7 +41,16 @@ public class GameManager : NetworkBehaviour
     private void FirstTaggerRpc()
     {
         //players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
-        Instantiate(itArrow, players[Random.Range(0, players.Count)].transform);
+
+        if (IsServer)
+        {
+            GameObject randomPlayer = players[Random.Range(0, players.Count)];
+            var arrow =  Instantiate(itArrow, randomPlayer.transform);
+            
+            arrow.GetComponent<NetworkObject>().Spawn();
+            arrow.transform.SetParent(randomPlayer.transform);
+        }
+            
     }
 
     [Rpc(SendTo.Everyone)]
@@ -56,7 +65,8 @@ public class GameManager : NetworkBehaviour
         //gameTimer.SetActive(true);
         //preGameTimer.SetActive(false);
 
-        FirstTaggerRpc();
+        if (IsServer)
+            FirstTaggerRpc();
 
         Debug.Log("GameStart");
     }
