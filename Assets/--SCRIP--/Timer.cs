@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.Netcode;
+using static UnityEngine.CullingGroup;
+using JetBrains.Annotations;
 
-public class Timer : MonoBehaviour
+public class Timer : NetworkBehaviour
 {
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] float remainingTime;
@@ -12,24 +14,32 @@ public class Timer : MonoBehaviour
     public GameManager gm;
     public bool gameStart;
     public bool gameEnd;
+    public bool isSpawned;
 
+    public NetworkVariable<float> Clock = new NetworkVariable<float>();
+
+    private void Start()
+    {
+        gm = GameObject.Find("Game Manager").GetComponent<GameManager>();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        CountdownRpc();
+        if (isSpawned == true) 
+            CountdownRpc();
     }
 
     [Rpc(SendTo.Everyone)]
     private void CountdownRpc()
     {
         //countdown timer
-        if (remainingTime > 0)
-            remainingTime -= Time.deltaTime;
+        if (Clock.Value > 0 && IsServer)
+            Clock.Value -= Time.deltaTime;
         //stop timer at 0
-        else if (remainingTime < 1)
+        else if (Clock.Value < 1 && IsServer)
         {
-            remainingTime = 0;
+            Clock.Value = 0;
 
             if (gameStart == false)
             {
@@ -39,9 +49,32 @@ public class Timer : MonoBehaviour
 
         }
 
-
-        int minutes = Mathf.FloorToInt(remainingTime / 60);
-        int seconds = Mathf.FloorToInt(remainingTime % 60);
-        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        
     }
+
+    public override void OnNetworkSpawn()
+    {
+        Clock.OnValueChanged += OnStateChange;
+
+        isSpawned = true;
+
+        
+        if (IsServer)
+        {
+           Clock.Value = 30;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        Clock.OnValueChanged -= OnStateChange;
+    }
+
+    public void OnStateChange(float previous,  float current)
+    {
+            int minutes = Mathf.FloorToInt(Clock.Value / 60);
+            int seconds = Mathf.FloorToInt(Clock.Value % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
 }

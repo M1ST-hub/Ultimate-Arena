@@ -134,10 +134,10 @@ public class PlayerController : NetworkBehaviour
             else
                 rb.linearDamping = 0;
 
-            if (itArrow.activeInHierarchy == true)
+            /*if (itArrow.activeInHierarchy == true)
                 isTagger = true;
             else
-                isTagger = false;
+                isTagger = false;*/
         }
 
     }
@@ -393,13 +393,13 @@ public class PlayerController : NetworkBehaviour
             Invoke(nameof(ResetTag), tagCooldown);
             Debug.Log("Tagged");
         }
-        Debug.Log("INrANGE");   
+        
     }
 
     [Rpc(SendTo.Everyone)]
     private void TagRpc(int taggedPlayer)
     {
-        itArrow.SetActive(false);
+        
         GameManager.Instance.players[taggedPlayer].GetComponent<PlayerController>().itArrow.SetActive(true);
         Debug.Log("Tagged");
     }
