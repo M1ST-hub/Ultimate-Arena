@@ -100,6 +100,7 @@ public class PlayerController : NetworkBehaviour
             capCol = GetComponentInChildren<CapsuleCollider>();
             rb.freezeRotation = true;
             readyToJump = true;
+            readyToTag = true;
 
             if (IsLocalPlayer)
                 body.enabled = false;
@@ -135,10 +136,10 @@ public class PlayerController : NetworkBehaviour
             else
                 rb.linearDamping = 0;
 
-            /*if (itArrow.activeInHierarchy == true)
+            if (GameManager.Instance.isGameStarted && TheItArrow.Instance.transform.parent == transform)
                 isTagger = true;
             else
-                isTagger = false;*/
+                isTagger = false;
         }
 
     }
@@ -386,9 +387,9 @@ public class PlayerController : NetworkBehaviour
         {
             readyToTag = false;
 
-            if (GameManager.Instance.players.Contains(other.gameObject))
+            if (GameManager.Instance.players.Contains(other.transform.parent.gameObject))
             {
-                TagRpc(GameManager.Instance.players.IndexOf(other.gameObject));
+                TagRpc(GameManager.Instance.players.IndexOf(other.transform.parent.gameObject));
             }
 
             Invoke(nameof(ResetTag), tagCooldown);
@@ -403,9 +404,8 @@ public class PlayerController : NetworkBehaviour
         if (IsServer)
         {
             TheItArrow.Instance.transform.SetParent(GameManager.Instance.players[taggedPlayer].transform);
+            Debug.Log("Switched Arrow");
         }
-        
-        Debug.Log("Tagged");
     }
 
     private void ResetTag()

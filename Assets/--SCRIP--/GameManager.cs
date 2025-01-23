@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Entities;
+using UnityEditor.PackageManager;
 
 public class GameManager : NetworkBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManager : NetworkBehaviour
     public GameObject gameTimer;
     public GameObject preGameTimer;
     public GameObject canvas;
+    public bool isGameStarted = false;
     public static GameManager Instance {  get; private set; }
 
     private void Awake()
@@ -29,7 +31,7 @@ public class GameManager : NetworkBehaviour
     void Start()
     {
         
-        NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
+        //NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
     }
 
     void Update() 
@@ -41,7 +43,7 @@ public class GameManager : NetworkBehaviour
     private void FirstTaggerRpc()
     {
         //players[Random.Range(0, players.Count)].GetComponent<PlayerController>().itArrow.SetActive(true);
-
+        isGameStarted = true;
         if (IsServer)
         {
             GameObject randomPlayer = players[Random.Range(0, players.Count)];
@@ -49,6 +51,7 @@ public class GameManager : NetworkBehaviour
             
             arrow.GetComponent<NetworkObject>().Spawn();
             arrow.transform.SetParent(randomPlayer.transform);
+            
         }
             
     }
@@ -56,6 +59,7 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void GameStartRpc()
     {
+        GetPlayers();
 
         foreach (GameObject player in players)
         {
@@ -75,6 +79,14 @@ public class GameManager : NetworkBehaviour
     public void GameEndRpc()
     {
         Destroy(itArrow);
+    }
+
+    private void GetPlayers()
+    {
+        foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            players.Add(client.PlayerObject.gameObject);
+        }
     }
 
     private void PlayerJoined(ulong clientId)
