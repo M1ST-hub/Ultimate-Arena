@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 public class CameraController : NetworkBehaviour
 {
@@ -15,6 +16,8 @@ public class CameraController : NetworkBehaviour
     float xRotation;
     float yRotation;
 
+    public float vertLook;
+    public float horizLook;
 
 
     // Start is called before the first frame update
@@ -38,8 +41,8 @@ public class CameraController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-            float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+            float mouseX = horizLook * Time.deltaTime * sensX;
+            float mouseY = vertLook * Time.deltaTime * sensY;
 
             yRotation += mouseX;
 
@@ -62,4 +65,11 @@ public class CameraController : NetworkBehaviour
     {
         transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
     }
+
+    public void OnLook(InputValue context)
+    {
+        horizLook = context.Get<Vector2>().x;
+        vertLook = context.Get<Vector2>().y;
+    }
+
 }

@@ -79,11 +79,11 @@ public class WallRunning : MonoBehaviour
     private void StateMachine()
     {
         //Getting Inputs 
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        horizontalInput = pm.horizontalInput;
+        verticalInput = pm.verticalInput;
 
-        upwardsRunning = Input.GetKey(upwardsRunKey);
-        downwardsRunning = Input.GetKey(downwardsRunKey);
+        upwardsRunning = pm.sprinting;
+        downwardsRunning = pm.crouching;
 
         //state 1 - wallrun
         if ((wallLeft || wallRight) && verticalInput > 0 && AboveGround() && !exitingWall)
@@ -102,7 +102,7 @@ public class WallRunning : MonoBehaviour
             }
 
             //wall jump
-            if (Input.GetKeyDown(jumpKey)) WallJump();
+            if (pm.jumping) WallJump();
         }
 
         //state 2 - exiting

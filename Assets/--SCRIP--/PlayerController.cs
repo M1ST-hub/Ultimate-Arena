@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -66,8 +67,8 @@ public class PlayerController : NetworkBehaviour
 
     public Transform orientation;
 
-    float horizontalInput;
-    float verticalInput;
+    public float horizontalInput;
+    public float verticalInput;
 
     Vector3 moveDirection;
 
@@ -89,6 +90,11 @@ public class PlayerController : NetworkBehaviour
     public bool crouching;
     public bool wallrunning;
     public bool climbing;
+    public bool tagging;
+    public bool jumping;
+    public bool sprinting;
+    public bool interacting;
+    public bool scoreboarding;
 
     // Start is called before the first frame update
     void Start()
@@ -158,10 +164,10 @@ public class PlayerController : NetworkBehaviour
     // Update is called once per frame
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        //horizontalInput = Input.GetAxisRaw("Horizontal");
+        //verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (jumping && readyToJump && grounded)
         {
             readyToJump = false;
 
@@ -172,7 +178,7 @@ public class PlayerController : NetworkBehaviour
 
 
         //start crouch
-        if (Input.GetKeyDown(crouchKey))
+        if (crouching)
         {
             capCol.height = 1.3f;
             capCol.center = new Vector3(0, -.3f, 0);
@@ -183,7 +189,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         // stop crouch
-        if (Input.GetKeyUp(crouchKey))
+        if (crouching == false)
         {
             //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
             anim.SetBool("isCrouching", false);
@@ -193,23 +199,23 @@ public class PlayerController : NetworkBehaviour
         }
 
         //scoreboard
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (scoreboarding)
         {
             scoreboard.transform.GetChild(0).gameObject.SetActive(true);
         }
-        else if (Input.GetKeyUp(KeyCode.Tab))
+        else if (scoreboarding == false)
         {
             scoreboard.transform.GetChild(0).gameObject.SetActive(false);
         }
 
-        //pause menu
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            pause.transform.GetChild(0).gameObject.SetActive(true);
 
-            Cursor.lockState = CursorLockMode.None;
-        }
+    }
 
+    public void Pause()
+    {
+        pause.transform.GetChild(0).gameObject.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void StateHandler()
@@ -243,7 +249,7 @@ public class PlayerController : NetworkBehaviour
             }
 
             // Mode - Crouching
-            else if (Input.GetKey(crouchKey))
+            else if (crouching)
             {
                 state = MovementState.crouching;
                 desiredMoveSpeed = crouchSpeed;
@@ -251,7 +257,7 @@ public class PlayerController : NetworkBehaviour
 
 
             //Mode - Sprinting
-            if (grounded && Input.GetKey(sprintKey))
+            if (grounded && sprinting)
             {
                 state = MovementState.sprinting;
                 desiredMoveSpeed = sprintSpeed;
@@ -383,7 +389,7 @@ public class PlayerController : NetworkBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetType() == typeof(CapsuleCollider) && other.CompareTag("Player") && Input.GetKeyDown(tagKey) && readyToTag && isTagger)
+        if (other.GetType() == typeof(CapsuleCollider) && other.CompareTag("Player") && tagging && readyToTag && isTagger)
         {
             readyToTag = false;
 
@@ -429,4 +435,49 @@ public class PlayerController : NetworkBehaviour
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
 
+    public void OnMove(InputValue context)
+    {
+        horizontalInput = context.Get<Vector2>().x;
+        verticalInput = context.Get<Vector2>().y;
+    }
+
+    public void OnJump(InputValue context)
+    {
+        jumping = context.isPressed;
+    }
+
+    public void OnSprint(InputValue context)
+    {
+        sprinting = context.isPressed;
+    }
+
+    public void OnCrouch(InputValue context)
+    {
+        crouching = context.isPressed;
+    }
+
+    public void OnTag(InputValue context)
+    {
+        tagging = context.isPressed;
+    }
+
+    public void OnInteract(InputValue context)
+    {
+        interacting = context.isPressed;
+    }
+
+    public void OnSlide (InputValue context)
+    {
+        sliding = context.isPressed;
+    }
+
+    public void OnScoreboard(InputValue context)
+    {
+        scoreboarding = context.isPressed;
+    }
+
+    public void OnPause(InputValue context)
+    {
+        Pause();
+    }
 }

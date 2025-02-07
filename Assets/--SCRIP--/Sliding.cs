@@ -11,10 +11,12 @@ public class Sliding : MonoBehaviour
     [Header("Sliding")]
     public float maxSlideTime;
     public float slideForce;
-    private float slideTimer;
+    public float slideTimer;
 
     public float slideYScale;
     private float startYScale;
+
+    public bool isSliding;
 
     [Header("Input")]
     public KeyCode slideKey = KeyCode.LeftControl;
@@ -31,25 +33,25 @@ public class Sliding : MonoBehaviour
 
     private void Update()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        horizontalInput = pm.horizontalInput;
+        verticalInput = pm.verticalInput;
 
-        if (Input.GetKeyDown(slideKey) && (horizontalInput != 0 || verticalInput != 0))
+        if (pm.sliding && (horizontalInput != 0 || verticalInput != 0) && isSliding == false)
             StartSlide();
 
-        if (Input.GetKeyUp(slideKey) && pm.sliding)
+        if (pm.sliding == false && isSliding)
             StopSlide();
     }
 
     private void FixedUpdate()
     {
-        if (pm.sliding)
+        if (isSliding)
             SlidingMovement();
     }
 
     private void StartSlide()
     {
-        pm.sliding = true;
+        isSliding = true;
 
         playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
         rb.AddForce(Vector3.down * 1f, ForceMode.Impulse);
@@ -66,21 +68,26 @@ public class Sliding : MonoBehaviour
         {
             rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
 
-            slideTimer -= Time.deltaTime;
+            
         }
+
 
         //sliding on slope
         else
         {
             rb.AddForce(pm.GetSlopeMoveDirection(inputDirection) * slideForce, ForceMode.Force);
         }
+        slideTimer -= Time.deltaTime;
 
         if (slideTimer <= 0)
             StopSlide();
+
+        
     }
 
     private void StopSlide()
     {
+        isSliding = false;
         pm.sliding = false;
 
         playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
