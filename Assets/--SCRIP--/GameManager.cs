@@ -10,10 +10,14 @@ public class GameManager : NetworkBehaviour
     public  List <GameObject> players;
     public GameObject itArrow;
     public GameObject[] spawnPoints;
+    public GameObject[] endPoints;
     public GameObject gameTimer;
     public GameObject preGameTimer;
     public GameObject canvas;
     public bool isGameStarted = false;
+
+    private GameObject timmy;
+    private GameObject playTime;
     public static GameManager Instance {  get; private set; }
 
     private void Awake()
@@ -66,11 +70,12 @@ public class GameManager : NetworkBehaviour
             player.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
 
-        //gameTimer.SetActive(true);
-        //preGameTimer.SetActive(false);
+        Destroy(timmy);
 
         if (IsServer)
             FirstTaggerRpc();
+
+        SpawnGameTimerRpc();
 
         Debug.Log("GameStart");
     }
@@ -78,7 +83,18 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void GameEndRpc()
     {
+        GetPlayers();
+
+        foreach (GameObject player in players)
+        {
+            player.transform.position = endPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+        }
+
+        Destroy(playTime);
+
         Destroy(itArrow);
+
+        Debug.Log("GameEnd");
     }
 
     private void GetPlayers()
@@ -105,12 +121,18 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void SpawnTimerRpc()
     {
-       var timmy = Instantiate(preGameTimer, canvas.transform);
+        timmy = Instantiate(preGameTimer, canvas.transform);
         timmy.GetComponent<NetworkObject>().Spawn();
         timmy.transform.SetParent(canvas.transform);
-        
-        
     }
 
-    
+    [Rpc(SendTo.Everyone)]
+    public void SpawnGameTimerRpc()
+    {
+        playTime = Instantiate(gameTimer, canvas.transform);
+        playTime.GetComponent<NetworkObject>().Spawn();
+        playTime.transform.SetParent(canvas.transform);
+    }
+
+
 }

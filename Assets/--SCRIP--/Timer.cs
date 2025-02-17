@@ -15,6 +15,9 @@ public class Timer : NetworkBehaviour
     public bool gameStart;
     public bool gameEnd;
     public bool isSpawned;
+    public bool preGameTimer;
+    public bool postGameTimer;
+    
 
     public NetworkVariable<float> Clock = new NetworkVariable<float>();
 
@@ -41,10 +44,16 @@ public class Timer : NetworkBehaviour
         {
             Clock.Value = 0;
 
-            if (gameStart == false)
+            if (preGameTimer == true)
             {
                 gameStart = true;
                 gm.GameStartRpc();
+            }
+            else if (preGameTimer == false && postGameTimer == false)
+            {
+                gameStart = false;
+                gameEnd = true;
+                gm.GameEndRpc();
             }
 
         }
