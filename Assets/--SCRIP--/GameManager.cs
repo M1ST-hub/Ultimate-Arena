@@ -61,6 +61,13 @@ public class GameManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
+    public void DestroyTimmyRpc()
+    {
+        Destroy(playTime);
+        Debug.Log("tim ded");
+    }
+
+    [Rpc(SendTo.Everyone)]
     public void GameStartRpc()
     {
         GetPlayers();
@@ -72,13 +79,18 @@ public class GameManager : NetworkBehaviour
 
         Destroy(timmy);
 
+        DestroyTimmyRpc();
+
         if (IsServer)
             FirstTaggerRpc();
 
         SpawnGameTimerRpc();
 
+        gameTimer.GetComponent<Timer>().UpdateGame();
+
         Debug.Log("GameStart");
     }
+
 
     [Rpc(SendTo.Everyone)]
     public void GameEndRpc()
@@ -90,7 +102,7 @@ public class GameManager : NetworkBehaviour
             player.transform.position = endPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
 
-        Destroy(playTime);
+        //Destroy(playTime);
 
         Destroy(itArrow);
 
@@ -132,6 +144,8 @@ public class GameManager : NetworkBehaviour
         playTime = Instantiate(gameTimer, canvas.transform);
         playTime.GetComponent<NetworkObject>().Spawn();
         playTime.transform.SetParent(canvas.transform);
+
+       
     }
 
 

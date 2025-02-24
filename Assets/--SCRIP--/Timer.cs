@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Netcode;
 using static UnityEngine.CullingGroup;
 using JetBrains.Annotations;
+using System.Threading;
 
 public class Timer : NetworkBehaviour
 {
@@ -17,7 +18,8 @@ public class Timer : NetworkBehaviour
     public bool isSpawned;
     public bool preGameTimer;
     public bool postGameTimer;
-    
+    public bool gameInProgress;
+    public bool gameTimer;
 
     public NetworkVariable<float> Clock = new NetworkVariable<float>();
 
@@ -35,7 +37,14 @@ public class Timer : NetworkBehaviour
 
     [Rpc(SendTo.Everyone)]
     private void CountdownRpc()
-    {
+    {   
+        preGameTimer = true;
+        postGameTimer = false;
+        gameTimer = false;
+        gameStart = false;
+        gameEnd = false;
+        gameInProgress = false;
+
         //countdown timer
         if (Clock.Value > 0 && IsServer)
             Clock.Value -= Time.deltaTime;
@@ -44,22 +53,38 @@ public class Timer : NetworkBehaviour
         {
             Clock.Value = 0;
 
-            if (preGameTimer == true)
+            if (preGameTimer == true && gameStart == false && gameInProgress == false)
             {
-                gameStart = true;
                 gm.GameStartRpc();
             }
-            else if (preGameTimer == false && postGameTimer == false)
+            else if (preGameTimer == false && gameStart == true && gameTimer == true)
             {
+                
+                gameTimer = false;
+            }
+            else if (preGameTimer == false && postGameTimer == false && gameStart == true && gameInProgress == true && gameTimer == false)
+            {
+                gm.DestroyTimmyRpc();
+                postGameTimer = true;
                 gameStart = false;
                 gameEnd = true;
                 gm.GameEndRpc();
             }
 
+
         }
 
         
     }
+
+    public void UpdateGame()
+    {
+        preGameTimer = false;
+        gameStart = true;
+        gameInProgress = true;
+    }
+
+
 
     public override void OnNetworkSpawn()
     {
