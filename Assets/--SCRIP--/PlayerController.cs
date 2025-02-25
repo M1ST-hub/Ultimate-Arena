@@ -142,7 +142,7 @@ public class PlayerController : NetworkBehaviour
             else
                 rb.linearDamping = 0;
 
-            if (GameManager.Instance.isGameStarted && TheItArrow.Instance.transform.parent == transform)
+            if (GameManager.Instance.isGameStarted && TheItArrow.Instance != null && TheItArrow.Instance.transform.parent == transform)
                 isTagger = true;
             else
                 isTagger = false;

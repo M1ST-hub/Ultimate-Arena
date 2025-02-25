@@ -470,10 +470,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  sensX: 600
-  sensY: 500
+  sensX: 100
+  sensY: 50
   orientation: {fileID: 3459060028832005621}
   camHolder: {fileID: 8837324269609005105}
+  vertLook: 0
+  horizLook: 0
 --- !u!1 &1158371677606762515
 GameObject:
   m_ObjectHideFlags: 0
@@ -1179,6 +1181,7 @@ MonoBehaviour:
   playerObj: {fileID: 1628868754314394314}
   maxSlideTime: 0.75
   slideForce: 200
+  slideTimer: 0
   slideYScale: 0.5
   isSliding: 0
   slideKey: 99

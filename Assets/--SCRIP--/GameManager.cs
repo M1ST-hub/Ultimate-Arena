@@ -11,14 +11,19 @@ public class GameManager : NetworkBehaviour
     public GameObject itArrow;
     public GameObject[] spawnPoints;
     public GameObject[] endPoints;
+    public GameObject[] restartPoints;
     public GameObject gameTimer;
     public GameObject preGameTimer;
+    public GameObject postGameTimer;
     public GameObject canvas;
     public bool isGameStarted = false;
 
     private GameObject timmy;
     private GameObject playTime;
+    private GameObject endTimer;
     public static GameManager Instance {  get; private set; }
+
+    private GameObject arrow;
 
     private void Awake()
     {
@@ -34,7 +39,8 @@ public class GameManager : NetworkBehaviour
 
     void Start()
     {
-        
+        Timer.gameStart = false;
+        Timer.gameEnd = false;
         //NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
     }
 
@@ -51,7 +57,7 @@ public class GameManager : NetworkBehaviour
         if (IsServer)
         {
             GameObject randomPlayer = players[Random.Range(0, players.Count)];
-            var arrow =  Instantiate(itArrow, randomPlayer.transform);
+            arrow =  Instantiate(itArrow, randomPlayer.transform);
             
             arrow.GetComponent<NetworkObject>().Spawn();
             arrow.transform.SetParent(randomPlayer.transform);
@@ -60,12 +66,6 @@ public class GameManager : NetworkBehaviour
             
     }
 
-    [Rpc(SendTo.Everyone)]
-    public void DestroyTimmyRpc()
-    {
-        Destroy(playTime);
-        Debug.Log("tim ded");
-    }
 
     [Rpc(SendTo.Everyone)]
     public void GameStartRpc()
@@ -79,14 +79,12 @@ public class GameManager : NetworkBehaviour
 
         Destroy(timmy);
 
-        DestroyTimmyRpc();
-
         if (IsServer)
             FirstTaggerRpc();
 
         SpawnGameTimerRpc();
 
-        gameTimer.GetComponent<Timer>().UpdateGame();
+        Timer.gameStart = true;
 
         Debug.Log("GameStart");
     }
@@ -99,14 +97,39 @@ public class GameManager : NetworkBehaviour
 
         foreach (GameObject player in players)
         {
-            player.transform.position = endPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+            player.transform.position = endPoints[Random.Range(0, endPoints.Length)].transform.position;
         }
 
-        //Destroy(playTime);
+        Destroy(playTime);
 
-        Destroy(itArrow);
+        SpawnPostGameTimerRpc();
+
+        if (arrow != null)
+            Destroy(arrow);
 
         Debug.Log("GameEnd");
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void GameRestartRpc()
+    {
+        GetPlayers();
+
+        foreach (GameObject player in players)
+        {
+            player.transform.position = restartPoints[Random.Range(0, restartPoints.Length)].transform.position;
+        }
+
+        Destroy(endTimer);
+
+        SpawnTimerRpc();
+
+        if (arrow != null)
+            Destroy(arrow);
+
+        Timer.gameStart = false;
+
+        Debug.Log("Game Restarted");
     }
 
     private void GetPlayers()
@@ -144,9 +167,14 @@ public class GameManager : NetworkBehaviour
         playTime = Instantiate(gameTimer, canvas.transform);
         playTime.GetComponent<NetworkObject>().Spawn();
         playTime.transform.SetParent(canvas.transform);
-
-       
     }
 
+    [Rpc(SendTo.Everyone)]
+    public void SpawnPostGameTimerRpc()
+    {
+        endTimer = Instantiate(postGameTimer, canvas.transform);
+        endTimer.GetComponent<NetworkObject>().Spawn();
+        endTimer.transform.SetParent(canvas.transform);
+    }
 
 }

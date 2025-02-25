@@ -13,18 +13,18 @@ public class Timer : NetworkBehaviour
     [SerializeField] float remainingTime;
 
     public GameManager gm;
-    public bool gameStart;
-    public bool gameEnd;
-    public bool isSpawned;
+    static public bool gameStart;
+    static public bool gameEnd;
+    static public bool isSpawned;
     public bool preGameTimer;
     public bool postGameTimer;
     public bool gameInProgress;
-    public bool gameTimer;
 
     public NetworkVariable<float> Clock = new NetworkVariable<float>();
 
     private void Start()
     {
+
         gm = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
@@ -38,12 +38,6 @@ public class Timer : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void CountdownRpc()
     {   
-        preGameTimer = true;
-        postGameTimer = false;
-        gameTimer = false;
-        gameStart = false;
-        gameEnd = false;
-        gameInProgress = false;
 
         //countdown timer
         if (Clock.Value > 0 && IsServer)
@@ -53,38 +47,23 @@ public class Timer : NetworkBehaviour
         {
             Clock.Value = 0;
 
-            if (preGameTimer == true && gameStart == false && gameInProgress == false)
+            if (preGameTimer == true && gameStart == false)
             {
                 gm.GameStartRpc();
             }
-            else if (preGameTimer == false && gameStart == true && gameTimer == true)
+            else if (preGameTimer == false && postGameTimer == false && gameInProgress == true)
             {
-                
-                gameTimer = false;
-            }
-            else if (preGameTimer == false && postGameTimer == false && gameStart == true && gameInProgress == true && gameTimer == false)
-            {
-                gm.DestroyTimmyRpc();
-                postGameTimer = true;
-                gameStart = false;
-                gameEnd = true;
                 gm.GameEndRpc();
             }
-
+            else if (postGameTimer == true)
+            {
+                gm.GameRestartRpc();
+            }
 
         }
 
         
     }
-
-    public void UpdateGame()
-    {
-        preGameTimer = false;
-        gameStart = true;
-        gameInProgress = true;
-    }
-
-
 
     public override void OnNetworkSpawn()
     {
@@ -95,7 +74,7 @@ public class Timer : NetworkBehaviour
         
         if (IsServer)
         {
-           Clock.Value = 30;
+           Clock.Value = 20;
         }
     }
 
