@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class CameraController : NetworkBehaviour
 {
@@ -19,21 +20,26 @@ public class CameraController : NetworkBehaviour
     public float vertLook;
     public float horizLook;
 
+    private Camera mainCamera;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        mainCamera = GetComponent<Camera>();
         if (IsOwner)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
-            GetComponent<Camera>().enabled = false;
-            GetComponent<AudioListener>().enabled = false;
+           
+           mainCamera.enabled = false;
+           GetComponent<AudioListener>().enabled = false;
         }
 
-       
+        mainCamera.fieldOfView = PlayerPrefs.GetFloat("FOV", 80f);
+        
     }
 
     // Update is called once per frame
