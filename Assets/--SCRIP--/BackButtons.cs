@@ -3,21 +3,56 @@ using UnityEngine.UI;
 
 public class BackButtons : MonoBehaviour
 {
-    private Button backButton;
+    private Button theButton;
 
     private UIinputManager inputManager;
+
+    public UIStuff uiStuff;
+
+    public float delay;
+    public bool clickReset;
+    public enum UIStuff
+    {
+        back,
+        next,
+        previous
+    } 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        backButton = GetComponent<Button>();
+
+        theButton = GetComponent<Button>();
         inputManager = GameObject.Find("InputManager").GetComponent<UIinputManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (inputManager.isBacken)
+        if (delay > 0)
+        {
+            delay -= Time.deltaTime;
+            clickReset = false;
+        }
+
+        if (delay <= 0)
+        {
+            clickReset = true;
+        }
+
+        if (inputManager.isBacken && uiStuff == UIStuff.back && clickReset)
+        {
+            // Simulate the button click
+            SimulateButtonClick();
+        }
+
+        if (inputManager.isNexten && uiStuff == UIStuff.next && clickReset)
+        {
+            // Simulate the button click
+            SimulateButtonClick();
+        }
+
+        if (inputManager.isPreviousen && uiStuff == UIStuff.previous && clickReset)
         {
             // Simulate the button click
             SimulateButtonClick();
@@ -26,10 +61,12 @@ public class BackButtons : MonoBehaviour
 
     private void SimulateButtonClick()
     {
-        if (backButton != null)
+        if (theButton != null)
         {
             // Trigger the button's onClick event
-            backButton.onClick.Invoke();
+            theButton.onClick.Invoke();
         }
+
+        delay = 0.25f;
     }
 }
