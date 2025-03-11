@@ -23,6 +23,7 @@ public class BackButtons : MonoBehaviour
     {
 
         theButton = GetComponent<Button>();
+
         inputManager = GameObject.Find("InputManager").GetComponent<UIinputManager>();
     }
 

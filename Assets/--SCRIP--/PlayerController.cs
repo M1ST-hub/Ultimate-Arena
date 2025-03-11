@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
@@ -74,6 +75,12 @@ public class PlayerController : NetworkBehaviour
 
     Rigidbody rb;
 
+    public PlayerInput playerInput;
+
+    public bool isPaused;
+
+    public PauseManager pauseManager;
+
     public MovementState state;
     public enum MovementState
     {
@@ -104,6 +111,8 @@ public class PlayerController : NetworkBehaviour
             rb = GetComponent<Rigidbody>();
             anim = GetComponent<Animator>();
             capCol = GetComponentInChildren<CapsuleCollider>();
+            playerInput = GetComponent<PlayerInput>();
+            pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
             rb.freezeRotation = true;
             readyToJump = true;
             readyToTag = true;
@@ -146,6 +155,11 @@ public class PlayerController : NetworkBehaviour
                 isTagger = true;
             else
                 isTagger = false;
+
+            if (pauseManager.isPaused == false && playerInput.currentActionMap.name != "Player")
+            {
+                playerInput.SwitchCurrentActionMap("Player");
+            }
         }
 
     }
@@ -213,9 +227,27 @@ public class PlayerController : NetworkBehaviour
 
     public void Pause()
     {
-        pause.transform.GetChild(0).gameObject.SetActive(true);
+        pauseManager.isPaused = !pauseManager.isPaused;
+        if (pauseManager.isPaused)
+        {
+            pause.transform.GetChild(0).gameObject.SetActive(true);
 
-        Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.None;
+
+            EventSystem.current.SetSelectedGameObject(pauseManager.resumeButton);
+
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+
+            pause.transform.GetChild(0).gameObject.SetActive(false);
+
+            playerInput.SwitchCurrentActionMap("Player");
+        }
+
+        
     }
 
     private void StateHandler()

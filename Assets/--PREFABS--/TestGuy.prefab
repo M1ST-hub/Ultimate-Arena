@@ -947,7 +947,7 @@ GameObject:
   - component: {fileID: 1981576233110833354}
   m_Layer: 8
   m_Name: TestGuy
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1382309427
+  GlobalObjectIdHash: 4101453873
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1155,6 +1155,9 @@ MonoBehaviour:
   orientation: {fileID: 3459060028832005621}
   horizontalInput: 0
   verticalInput: 0
+  playerInput: {fileID: 0}
+  isPaused: 0
+  pauseManager: {fileID: 0}
   state: 0
   sliding: 0
   crouching: 0
