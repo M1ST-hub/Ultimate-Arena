@@ -14,6 +14,7 @@ public class PlayerController : NetworkBehaviour
     public CapsuleCollider capCol;
     public SkinnedMeshRenderer body;
     public SkinnedMeshRenderer head;
+    public Scoring scoreManager;
 
     [Header("Movement")]
     private float moveSpeed;
@@ -429,6 +430,9 @@ public class PlayerController : NetworkBehaviour
             {
                 TagRpc(GameManager.Instance.players.IndexOf(other.transform.parent.gameObject));
             }
+
+            string taggedPlayerName = other.gameObject.name;
+            scoreManager.IncrementScore(taggedPlayerName);
 
             Invoke(nameof(ResetTag), tagCooldown);
             Debug.Log("Tagged");
