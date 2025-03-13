@@ -431,8 +431,8 @@ public class PlayerController : NetworkBehaviour
                 TagRpc(GameManager.Instance.players.IndexOf(other.transform.parent.gameObject));
             }
 
-            string taggedPlayerName = other.gameObject.name;
-            scoreManager.IncrementScore(taggedPlayerName);
+            //string taggedPlayerName = other.gameObject.name;
+            //scoreManager.IncrementScore(taggedPlayerName);
 
             Invoke(nameof(ResetTag), tagCooldown);
             Debug.Log("Tagged");

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Scoring : MonoBehaviour
-{
+{ /*
 
     // Dictionary to store player names and their scores
     private Dictionary<string, int> playerScores = new Dictionary<string, int>();
@@ -56,5 +56,5 @@ public class Scoring : MonoBehaviour
             }
         }
     }
-
+    */
 }

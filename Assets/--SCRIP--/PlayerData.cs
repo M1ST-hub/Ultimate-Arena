@@ -1,13 +1,18 @@
 using UnityEngine;
 
-public class PlayerData : MonoBehaviour
-{
-    [System.Serializable]
-    public class Player
+[System.Serializable]
+public class PlayerData {
+
+    public int level;
+    public int score;
+
+    public PlayerData (Player player)
     {
-        public string name;
-        public int score;
+        level = player.level;
+        score = player.score;
     }
+    
+
     
 
 }
