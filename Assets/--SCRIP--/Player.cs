@@ -3,7 +3,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public int level = 0;
-    public int score;
+    public int tokens;
+    public int[] ownedBanners;
+    public int[] ownedIcons;
 
     public void SavePlayer ()
     {
@@ -15,7 +17,9 @@ public class Player : MonoBehaviour
         PlayerData data = PlayerSaveManager.LoadPlayer();
 
         level = data.level;
-        score = data.score;
+        tokens = data.tokens;
+        ownedBanners = data.ownedBanners;
+        ownedIcons = data.ownedIcons;
     }
 
 }
