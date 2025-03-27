@@ -32,6 +32,8 @@ public static class PlayerSaveManager {
         else
         {
             Debug.LogError("Save file not foind in" +  path);
+            PlayerData data = new PlayerData();
+
             return null;
         }
     }

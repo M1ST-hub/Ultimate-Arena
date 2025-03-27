@@ -651,6 +651,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 99809555}
+  - component: {fileID: 99809556}
   m_Layer: 0
   m_Name: PlayerSaveManager
   m_TagString: Untagged
@@ -673,6 +674,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &99809556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99809554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b35eed5c084d8348ab62b25be62c368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 0
+  tokens: 0
+  ownedBanners: 
+  ownedIcons: 
+  playerName: 
 --- !u!1001 &238192215
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3957,7 +3975,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4786b7dd25109b04b82a4c6748af0eb5, type: 3}
   - {fileID: 21300000, guid: 2514fa7972113fc42bbbdc4cfc0e4351, type: 3}
   - {fileID: 21300000, guid: a99189e598ed05340889aa4f9314dabe, type: 3}
-  icons: []
+  icons:
+  - {fileID: -1492923064, guid: 8b267a9a368b9e44f8abe850b572293e, type: 3}
+  - {fileID: -1327588783, guid: ed0a70d13a66b7f49807862b6e6e28e7, type: 3}
 --- !u!4 &998381609
 Transform:
   m_ObjectHideFlags: 0

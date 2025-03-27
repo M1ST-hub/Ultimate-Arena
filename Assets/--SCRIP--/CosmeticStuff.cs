@@ -24,6 +24,11 @@ public class CosmeticStuff : MonoBehaviour
 
     }
 
+    public enum CosmeticIcon
+    {
+
+    }
+
     public Sprite[] banners;
     public Sprite[] icons;
 
