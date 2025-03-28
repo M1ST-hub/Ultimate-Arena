@@ -21,6 +21,9 @@ public class GameManager : NetworkBehaviour
     private GameObject timmy;
     private GameObject playTime;
     private GameObject endTimer;
+
+    public int gainedExperience;
+
     public static GameManager Instance {  get; private set; }
 
     private GameObject arrow;
@@ -106,8 +109,14 @@ public class GameManager : NetworkBehaviour
 
         if (arrow != null)
             Destroy(arrow);
+        
 
         Debug.Log("GameEnd");
+    }
+
+    public void CalculateExp()
+    {
+        ExperienceManager.Instance.AddExperience(gainedExperience);
     }
 
     [Rpc(SendTo.Everyone)]
@@ -176,5 +185,7 @@ public class GameManager : NetworkBehaviour
         endTimer.GetComponent<NetworkObject>().Spawn();
         endTimer.transform.SetParent(canvas.transform);
     }
+
+
 
 }

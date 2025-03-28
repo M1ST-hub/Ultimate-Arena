@@ -8,6 +8,9 @@ TagManager:
   - scoreboard
   - Pause
   - LeaveMatch
+  - ExperienceFill
+  - LevelText
+  - ExperienceText
   layers:
   - Default
   - TransparentFX

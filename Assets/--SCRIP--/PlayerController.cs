@@ -15,6 +15,7 @@ public class PlayerController : NetworkBehaviour
     public SkinnedMeshRenderer body;
     public SkinnedMeshRenderer head;
     public Scoring scoreManager;
+    public float taggerExp = 5f;
 
     [Header("Movement")]
     private float moveSpeed;
@@ -160,6 +161,11 @@ public class PlayerController : NetworkBehaviour
             if (pauseManager.isPaused == false && playerInput.currentActionMap.name != "Player")
             {
                 playerInput.SwitchCurrentActionMap("Player");
+            }
+
+            if (isTagger == true)
+            {
+                GameManager.Instance.gainedExperience = (int)(GameManager.Instance.gainedExperience + ((int)taggerExp * Time.deltaTime));
             }
         }
 
@@ -430,6 +436,8 @@ public class PlayerController : NetworkBehaviour
             {
                 TagRpc(GameManager.Instance.players.IndexOf(other.transform.parent.gameObject));
             }
+
+            GameManager.Instance.gainedExperience += 50;
 
             //string taggedPlayerName = other.gameObject.name;
             //scoreManager.IncrementScore(taggedPlayerName);
