@@ -16,12 +16,13 @@ public class PlayerData
         level = player.level;
         tokens = player.tokens;
         playerName = player.playerName;
- 
+        xp = player.xp;
     }
 
     public PlayerData()
     {
         level = 1;
+        xp = 0;
         tokens = 0;
         playerName = "AnonymousPlayer";
         ownedIcons = new int[] { 1, 0 };

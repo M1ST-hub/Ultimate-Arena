@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public int level;
+    public int xp;
     public int tokens;
     public int[] ownedBanners = new int[18];
     public int[] ownedIcons = new int[2];
@@ -46,6 +47,7 @@ public class Player : MonoBehaviour
         else
             level = data.level;
         tokens = data.tokens;
+        xp = data.xp;
 
         foreach (int i in ownedIcons)
         {
