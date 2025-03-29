@@ -92,7 +92,7 @@ public class ExperienceManager : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            AddExperience(50);
+            AddExperience(0);
         }
     }
     

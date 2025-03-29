@@ -25,6 +25,7 @@ public class GameManager : NetworkBehaviour
     public int gainedExperience;
     public int surviveExperience;
 
+    private PlayerController playerController;
     public static GameManager Instance {  get; private set; }
 
     private GameObject arrow;
@@ -110,15 +111,57 @@ public class GameManager : NetworkBehaviour
 
         if (arrow != null)
             Destroy(arrow);
-        
+
+        gainedExperience = gainedExperience + 50;
+
+        CalculateExp();
+        PlayerStats();
 
         Debug.Log("GameEnd");
     }
 
     public void CalculateExp()
     {
-        ExperienceManager.Instance.AddExperience(gainedExperience);
+        ExperienceManager.Instance.AddExperience(gainedExperience * (1 / 3));
     }
+
+    public void PlayerStats()
+    {
+        List<PlayerController> playerControllers = new List<PlayerController>();
+
+        // Gather stats for all players
+        foreach (GameObject player in players)
+        {
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                playerControllers.Add(playerController);
+            }
+        }
+
+        // Sort players by the most tags
+        playerControllers.Sort((a, b) => b.mostTags.CompareTo(a.mostTags)); // Sort descending by mostTags
+        DisplaySortedPlayers("Most Tags", playerControllers);
+
+        // Sort players by tagged time
+        playerControllers.Sort((a, b) => b.taggedTime.CompareTo(a.taggedTime)); // Sort descending by taggedTime
+        DisplaySortedPlayers("Most Tagged Time", playerControllers);
+
+        // Sort players by untagged time
+        playerControllers.Sort((a, b) => b.untaggedTime.CompareTo(a.untaggedTime)); // Sort descending by untaggedTime
+        DisplaySortedPlayers("Most Untagged Time", playerControllers);
+    }
+
+    private void DisplaySortedPlayers(string criteria, List<PlayerController> sortedPlayers)
+    {
+        Debug.Log($"Sorted by {criteria}:");
+
+        foreach (PlayerController playerController in sortedPlayers)
+        {
+            Debug.Log($"{playerController.name} - Tags: {playerController.mostTags}, Tagged Time: {playerController.taggedTime}, Untagged Time: {playerController.untaggedTime}");
+        }
+    }
+
 
     [Rpc(SendTo.Everyone)]
     public void GameRestartRpc()

@@ -17,10 +17,12 @@ public class PlayerController : NetworkBehaviour
 
     public float taggerExp = 5f;
     public float surviveExp = 8f;
-    private float untaggedTime = 0f;  // Time the player has been untagged
-    private float taggedTime = 0f;
+    private float untaggedMult = 0f;  // Time the player has been untagged
+    public float untaggedTime = 0f;
+    public float taggedTime = 0f;
     private float multiplier = 1f;  // Multiplier starts at 1
     private float maxMultiplier = 5f;  // Maximum multiplier cap
+    public int mostTags = 0;
 
     [Header("Movement")]
     private float moveSpeed;
@@ -173,33 +175,34 @@ public class PlayerController : NetworkBehaviour
                 taggedTime += Time.deltaTime;
 
                 // Calculate the experience gained as 2/3 of the tagged time
-                int experienceGained = (int)((taggedTime * (2f / 3f)) * taggerExp * Time.deltaTime);
+                int experienceGained = (int)((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
 
                 // Add the experience gained to the GameManager's total experience
                 GameManager.Instance.gainedExperience += experienceGained;
 
                 // Debugging line to check the XP gained and tagged time
-                Debug.Log($"XP Gained (Tagger): {experienceGained}, Tagged Time: {taggedTime}");
+                //Debug.Log($"XP Gained (Tagger): {experienceGained}, Tagged Time: {taggedTime}");
             }
 
             if (isTagger == false)
             {
+                untaggedMult += Time.deltaTime;
                 untaggedTime += Time.deltaTime;
 
                 // Increase the multiplier based on how long the player has been untagged
-                multiplier = Mathf.Min(1f + (untaggedTime / 10f), maxMultiplier);
+                multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
 
                 // Calculate the experience gained (base XP * multiplier * time)
                 int experienceGained = (int)(surviveExp * multiplier * Time.deltaTime);
                 GameManager.Instance.gainedExperience += experienceGained;
 
                 // Debugging line to check the XP and multiplier
-                Debug.Log($"XP Gained: {experienceGained}, Multiplier: {multiplier}");
+                //Debug.Log($"XP Gained: {experienceGained}, Multiplier: {multiplier}");
             }
             else
             {
                 // Reset untagged time when the player is tagged
-                untaggedTime = 0f;
+                untaggedMult = 0f;
                 multiplier = 1f;  // Reset multiplier when tagged
             }
         }
@@ -473,7 +476,7 @@ public class PlayerController : NetworkBehaviour
                 TagRpc(GameManager.Instance.players.IndexOf(other.transform.parent.gameObject));
             }
 
-            GameManager.Instance.gainedExperience += 50;
+            GameManager.Instance.gainedExperience += 30;
 
             //string taggedPlayerName = other.gameObject.name;
             //scoreManager.IncrementScore(taggedPlayerName);
