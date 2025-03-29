@@ -23,6 +23,7 @@ public class GameManager : NetworkBehaviour
     private GameObject endTimer;
 
     public int gainedExperience;
+    public int surviveExperience;
 
     public static GameManager Instance {  get; private set; }
 
@@ -137,6 +138,8 @@ public class GameManager : NetworkBehaviour
             Destroy(arrow);
 
         Timer.gameStart = false;
+
+        gainedExperience = 0;
 
         Debug.Log("Game Restarted");
     }
