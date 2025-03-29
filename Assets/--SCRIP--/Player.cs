@@ -1,6 +1,3 @@
-using System.Globalization;
-using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -33,7 +30,7 @@ public class Player : MonoBehaviour
         LoadPlayer();
     }
 
-    public void SavePlayer ()
+    public void SavePlayer()
     {
         PlayerSaveManager.SavePlayer(this);
     }
@@ -49,47 +46,27 @@ public class Player : MonoBehaviour
         tokens = data.tokens;
         xp = data.xp;
 
-        foreach (int i in ownedIcons)
-        {
-            Debug.Log(i);
-        }
-        
-
-        ////Icons--------------------------------------------------------------------------------
+        // Icons handling
         if (data.ownedIcons == null || data.ownedIcons.Length != 2)
         {
-            Debug.Log("NULL");
-            ownedIcons = new int[] { 1, 0};
-        }
-        else if (data.ownedIcons.Length != ownedIcons.Length)
-        {
-            Debug.Log("DIDNT MATCH LENGTH");
-            int[] temp = new int[2];
-            ownedIcons.CopyTo(temp, 0);
-            ownedIcons = temp;
-            ownedIcons = data.ownedIcons;
+            Debug.Log("NULL or invalid ownedIcons data");
+            ownedIcons = new int[] { 1, 0 };
         }
         else
         {
-            Debug.Log("LOADED PLAYER DATA");
             ownedIcons = data.ownedIcons;
         }
 
-        ////BANNERS--------------------------------------------------------------------------------
-        if (data.ownedBanners == null || data.ownedBanners.Length != 18)
+        // Banners handling - no longer necessary, as SetBannerOwnership will handle the updates
+        if (data.ownedBanners != null)
         {
-            ownedBanners = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 };
-        }
-        else if (data.ownedBanners.Length != ownedBanners.Length)
-        {
-            int[] temp = new int[18];
-            ownedBanners.CopyTo(temp, 0);
-            ownedBanners = temp;
             ownedBanners = data.ownedBanners;
         }
         else
         {
-            ownedBanners = data.ownedBanners;
+            // Default owned banners if the data is null
+            ownedBanners = new int[18];  // Default to all unowned
+            ownedBanners[0] = ownedBanners[1] = ownedBanners[2] = ownedBanners[3] = ownedBanners[4] = ownedBanners[5] = ownedBanners[6] = ownedBanners[7] = 1; // Example: Set some as owned by default
         }
 
         playerName = data.playerName;
@@ -98,6 +75,11 @@ public class Player : MonoBehaviour
     public void SetPlayerName(string newName)
     {
         playerName = newName;
+    }
+
+    public void SetBannerOwnership(int bannerIndex, bool isOwned)
+    {
+        ownedBanners[bannerIndex] = isOwned ? 1 : 0;
     }
 
 }
