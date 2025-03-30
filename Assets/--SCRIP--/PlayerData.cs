@@ -26,7 +26,7 @@ public class PlayerData
         tokens = 0;
         playerName = "AnonymousPlayer";
         ownedIcons = new int[] { 1, 0 };
-        ownedBanners = new int[] { 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        ownedBanners = new int[] { 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     }
 
 

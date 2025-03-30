@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ShopUIManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class ShopUIManager : MonoBehaviour
         if (!isActive)
         {
             PopulatePanel(cosmeticContent, cosmeticItems);
-            Debug.Log("hu");
+            
         }
     }
 
@@ -46,8 +47,8 @@ public class ShopUIManager : MonoBehaviour
                 GameObject itemObj = Instantiate(itemPrefab, content);  // Instantiate the single prefab
 
                 // Find and set components inside the prefab
-                itemObj.GetComponentInChildren<Text>().text = item.itemName;  // Set the item name
-                itemObj.GetComponentInChildren<Image>().sprite = item.itemIcon;  // Set the item icon
+                itemObj.GetComponentInChildren<TextMeshProUGUI>().text = item.name;  // Set the item name
+                itemObj.GetComponentInChildren<Image>().sprite = item.Image;  // Set the item icon
 
                 // Get the purchase button and set up the action
                 Button purchaseButton = itemObj.GetComponentInChildren<Button>();
@@ -55,10 +56,19 @@ public class ShopUIManager : MonoBehaviour
                 purchaseButton.onClick.AddListener(() => PurchaseItem(item));  // Add purchase action
 
                 // Optionally, you can change the button text depending on whether the item is purchased
-                Text buttonText = purchaseButton.GetComponentInChildren<Text>();
+                TextMeshProUGUI buttonText = purchaseButton.GetComponentInChildren<TextMeshProUGUI>();
                 buttonText.text = "Buy";  // Button text will always be "Buy" if the item is not purchased
+
+                Debug.Log("unowned banners broek");
+            }
+
+            if (Player.Instance.ownedBanners[item.itemID] == 1)
+            {
+                Debug.Log("owned all banners");
+                Player.Instance.ownedBanners[item.itemID] = 0;
             }
         }
+        
     }
 
     // Handle the purchase action
@@ -73,7 +83,7 @@ public class ShopUIManager : MonoBehaviour
         if (CanAffordItem(item))
         {
             item.isPurchased = true;
-            Debug.Log("Item purchased: " + item.itemName);
+            Debug.Log("Item purchased: " + item.name);
 
             // Remove the item from the shop (i.e., repopulate the shop UI)
             UpdateItemDisplay();
@@ -103,8 +113,8 @@ public class ShopUIManager : MonoBehaviour
 public class ItemData
 {
     public int itemID;
-    public string itemName;
-    public Sprite itemIcon;
+    public string name;
+    public Sprite Image;
     public float itemPrice;  // Adding price for purchase
     public bool isPurchased;  // To track if the item is already purchased
 }

@@ -5,7 +5,7 @@ public class Player : MonoBehaviour
     public int level;
     public int xp;
     public int tokens;
-    public int[] ownedBanners = new int[18];
+    public int[] ownedBanners = new int[19];
     public int[] ownedIcons = new int[2];
     public string playerName;
 
@@ -65,8 +65,8 @@ public class Player : MonoBehaviour
         else
         {
             // Default owned banners if the data is null
-            ownedBanners = new int[18];  // Default to all unowned
-            ownedBanners[0] = ownedBanners[1] = ownedBanners[2] = ownedBanners[3] = ownedBanners[4] = ownedBanners[5] = ownedBanners[6] = ownedBanners[7] = 1; // Example: Set some as owned by default
+            ownedBanners = new int[19];  // Default to all unowned
+            ownedBanners[6] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 0; // Example: Set some as owned by default
         }
 
         playerName = data.playerName;
