@@ -1,32 +1,44 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class ShopUIManager : MonoBehaviour
 {
     public GameObject itemPrefab;  // The single item prefab
     public Transform cosmeticContent;  // Content panel for the cosmetic shop
     public GameObject shopPanel;
+    public Scrollbar verticalScrollbar;
     public List<ItemData> cosmeticItems = new List<ItemData>();  // List of items in the cosmetic shop
 
     void Start()
     {
         shopPanel.SetActive(false);
+        verticalScrollbar.gameObject.SetActive(true);
     }
 
     public void ToggleShopPanel()
     {
         bool isActive = shopPanel.activeSelf;
 
+
         // Toggle the shop panel visibility
         shopPanel.SetActive(!isActive);
 
-        // If the shop is being opened (not already open), populate the items
+        // Force the Scrollbar to be enabled if it's disabled
+        verticalScrollbar.gameObject.SetActive(true);
+        verticalScrollbar.enabled = true;  // Make sure the scrollbar is enabled
+        verticalScrollbar.value = 0f;  // Scroll to top
+        verticalScrollbar.size = 0.3f;
+        Debug.Log("happ");
+
+        // Force a layout update (if necessary)
+        LayoutRebuilder.ForceRebuildLayoutImmediate(verticalScrollbar.GetComponent<RectTransform>());
+
+        // When re-enabling, restore the scrollbar value
         if (!isActive)
         {
             PopulatePanel(cosmeticContent, cosmeticItems);
-            
         }
     }
 
@@ -59,7 +71,7 @@ public class ShopUIManager : MonoBehaviour
                 TextMeshProUGUI buttonText = purchaseButton.GetComponentInChildren<TextMeshProUGUI>();
                 buttonText.text = "Buy";  // Button text will always be "Buy" if the item is not purchased
 
-                Debug.Log("unowned banners broek");
+                Debug.Log("Display content");
             }
 
             if (Player.Instance.ownedBanners[item.itemID] == 1)
@@ -68,7 +80,7 @@ public class ShopUIManager : MonoBehaviour
                 Player.Instance.ownedBanners[item.itemID] = 0;
             }
         }
-        
+
     }
 
     // Handle the purchase action
