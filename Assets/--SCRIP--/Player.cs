@@ -30,6 +30,12 @@ public class Player : MonoBehaviour
         LoadPlayer();
     }
 
+    [ContextMenu("DeletePlayer")]
+    public void DeletePlayer()
+    {
+        PlayerSaveManager.DeletePlayer();
+    }
+
     public void SavePlayer()
     {
         PlayerSaveManager.SavePlayer(this);
@@ -52,6 +58,13 @@ public class Player : MonoBehaviour
             Debug.Log("NULL or invalid ownedIcons data");
             ownedIcons = new int[] { 1, 0 };
         }
+        else if (data.ownedBanners.Length != ownedBanners.Length)
+        {
+            int[] temp = new int[19];
+            ownedBanners.CopyTo(temp, 0);
+            ownedBanners = temp;
+            ownedBanners = data.ownedBanners;
+        }
         else
         {
             ownedIcons = data.ownedIcons;
@@ -66,8 +79,10 @@ public class Player : MonoBehaviour
         {
             // Default owned banners if the data is null
             ownedBanners = new int[19];  // Default to all unowned
-            ownedBanners[6] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 0; // Example: Set some as owned by default
+             // Example: Set some as owned by default
         }
+
+        ownedBanners[6] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
 
         playerName = data.playerName;
     }

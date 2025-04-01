@@ -38,4 +38,14 @@ public static class PlayerSaveManager {
         }
     }
 
+    [ContextMenu("DeletePlayer")]
+    public static void DeletePlayer()
+    {
+        string path = Application.persistentDataPath + "/ImprecisionData.dat";
+        File.Delete(path);
+#if UNITY_EDITOR
+        UnityEditor.AssetDatabase.Refresh();
+#endif
+    }
+
 }

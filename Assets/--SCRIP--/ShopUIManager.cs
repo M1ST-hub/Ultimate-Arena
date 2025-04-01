@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,13 +9,11 @@ public class ShopUIManager : MonoBehaviour
     public GameObject itemPrefab;  // The single item prefab
     public Transform cosmeticContent;  // Content panel for the cosmetic shop
     public GameObject shopPanel;
-    public Scrollbar verticalScrollbar;
     public List<ItemData> cosmeticItems = new List<ItemData>();  // List of items in the cosmetic shop
 
     void Start()
     {
         shopPanel.SetActive(false);
-        verticalScrollbar.gameObject.SetActive(true);
     }
 
     public void ToggleShopPanel()
@@ -24,16 +23,7 @@ public class ShopUIManager : MonoBehaviour
 
         // Toggle the shop panel visibility
         shopPanel.SetActive(!isActive);
-
-        // Force the Scrollbar to be enabled if it's disabled
-        verticalScrollbar.gameObject.SetActive(true);
-        verticalScrollbar.enabled = true;  // Make sure the scrollbar is enabled
-        verticalScrollbar.value = 0f;  // Scroll to top
-        verticalScrollbar.size = 0.3f;
         Debug.Log("happ");
-
-        // Force a layout update (if necessary)
-        LayoutRebuilder.ForceRebuildLayoutImmediate(verticalScrollbar.GetComponent<RectTransform>());
 
         // When re-enabling, restore the scrollbar value
         if (!isActive)
@@ -50,11 +40,19 @@ public class ShopUIManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+
+        int i = 0;
         // Loop through each cosmetic item and instantiate the UI elements
         foreach (ItemData item in items)
         {
+            Debug.Log(i);
             // Only instantiate if the item is not purchased (using player's owned items data)
-            if (Player.Instance.ownedBanners[item.itemID] == 0)  // Check if the item is not owned
+            if (i == 19)
+                continue;
+            item.isPurchased = Player.Instance.ownedBanners[i] == 0 ? false : true;
+            i++;
+            
+            if (item.isPurchased == false)  // Check if the item is not owned
             {
                 GameObject itemObj = Instantiate(itemPrefab, content);  // Instantiate the single prefab
 
@@ -69,16 +67,16 @@ public class ShopUIManager : MonoBehaviour
 
                 // Optionally, you can change the button text depending on whether the item is purchased
                 TextMeshProUGUI buttonText = purchaseButton.GetComponentInChildren<TextMeshProUGUI>();
-                buttonText.text = "Buy";  // Button text will always be "Buy" if the item is not purchased
+                buttonText.text = item.itemPrice.ToString();  // Button text will always be "Buy" if the item is not purchased
 
                 Debug.Log("Display content");
             }
 
-            if (Player.Instance.ownedBanners[item.itemID] == 1)
+            /*if (Player.Instance.ownedBanners[item.itemID] == 1)
             {
                 Debug.Log("owned all banners");
                 Player.Instance.ownedBanners[item.itemID] = 0;
-            }
+            }*/
         }
 
     }
@@ -110,7 +108,7 @@ public class ShopUIManager : MonoBehaviour
     bool CanAffordItem(ItemData item)
     {
         // Assume player has a currency system; replace with actual check
-        float playerCurrency = 100f;  // Example currency amount
+        float playerCurrency = Player.Instance.tokens;
         return playerCurrency >= item.itemPrice;
     }
 
