@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,10 @@ public class ShopUIManager : MonoBehaviour
     public GameObject itemPrefab;  // The single item prefab
     public Transform cosmeticContent;  // Content panel for the cosmetic shop
     public GameObject shopPanel;
+    public TextMeshProUGUI tokensText;
     public List<ItemData> cosmeticItems = new List<ItemData>();  // List of items in the cosmetic shop
+
+    
 
     void Start()
     {
@@ -45,12 +49,12 @@ public class ShopUIManager : MonoBehaviour
         // Loop through each cosmetic item and instantiate the UI elements
         foreach (ItemData item in items)
         {
-            Debug.Log(i);
+            //Debug.Log(i);
             // Only instantiate if the item is not purchased (using player's owned items data)
-            if (i == 19)
-                continue;
-            item.isPurchased = Player.Instance.ownedBanners[i] == 0 ? false : true;
-            i++;
+            //if (i == 19)
+                //continue;
+            //item.isPurchased = Player.Instance.ownedBanners[i] == 0 ? false : true;
+            //i++;
             
             if (item.isPurchased == false)  // Check if the item is not owned
             {
@@ -88,14 +92,20 @@ public class ShopUIManager : MonoBehaviour
         {
             Debug.Log("Item already purchased!");
             return;
+            
         }
 
         if (CanAffordItem(item))
         {
             item.isPurchased = true;
+            Player.Instance.tokens -= (int)item.itemPrice;
             Debug.Log("Item purchased: " + item.name);
 
+            Player.Instance.SetBannerOwnership(item.itemID, true);
             // Remove the item from the shop (i.e., repopulate the shop UI)
+
+            Player.Instance.SavePlayer();
+            //Player.Instance.LoadPlayer();
             UpdateItemDisplay();
         }
         else
@@ -116,6 +126,7 @@ public class ShopUIManager : MonoBehaviour
     void UpdateItemDisplay()
     {
         PopulatePanel(cosmeticContent, cosmeticItems);  // Re-populate to update button text or other UI elements
+        tokensText.text = Player.Instance.tokens.ToString();
     }
 }
 

@@ -74,6 +74,7 @@ public class ExperienceManager : MonoBehaviour
         // Load the player data (XP and level) from the Player instance
         currentLevel = player.level;
         totalExperience = player.xp;
+        totalTokens = player.tokens;
 
         // Ensure totalExperience is not negative
         if (totalExperience < 0)
@@ -112,6 +113,7 @@ public class ExperienceManager : MonoBehaviour
         {
             currentLevel++;
             totalTokens += 600;
+            Player.Instance.SavePlayer();
             UpdateLevel();
         }
 
@@ -127,6 +129,7 @@ public class ExperienceManager : MonoBehaviour
         while (totalExperience >= nextLevelsExp)
         {
             currentLevel++;
+            totalTokens += 600;
             previousLevelsExp = nextLevelsExp;
             nextLevelsExp = (int)experienceCurve.Evaluate(currentLevel + 1);
         }
@@ -137,6 +140,7 @@ public class ExperienceManager : MonoBehaviour
         // Save the updated player data
         Player.Instance.level = currentLevel;
         Player.Instance.xp = totalExperience;
+        Player.Instance.tokens = totalTokens;
         Player.Instance.SavePlayer();
     }
 

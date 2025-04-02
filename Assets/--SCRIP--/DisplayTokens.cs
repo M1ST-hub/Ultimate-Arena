@@ -10,7 +10,7 @@ public class DisplayTokens : MonoBehaviour
     {
         if (Player.Instance.tokens == 0)
         {
-            Debug.LogError("No tokens");
+            Debug.Log("No tokens");
         }
         if (showTokens == null)
         {

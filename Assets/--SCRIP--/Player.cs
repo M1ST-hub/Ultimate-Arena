@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,6 +9,8 @@ public class Player : MonoBehaviour
     public int[] ownedBanners = new int[19];
     public int[] ownedIcons = new int[2];
     public string playerName;
+
+    public List<ItemData> cosmeticItems = new List<ItemData>(); // Add this line
 
     public static Player Instance;
 
@@ -38,6 +41,7 @@ public class Player : MonoBehaviour
 
     public void SavePlayer()
     {
+        Debug.Log("Saving tokens: " + tokens);
         PlayerSaveManager.SavePlayer(this);
     }
 
@@ -45,15 +49,27 @@ public class Player : MonoBehaviour
     {
         PlayerData data = PlayerSaveManager.LoadPlayer();
 
-        if (data.level == 0)
-            level = 1;
-        else
-            level = data.level;
-        tokens = data.tokens;
-        xp = data.xp;
+        if (data != null)
+        {
 
-        // Icons handling
-        if (data.ownedIcons == null || data.ownedIcons.Length != 2)
+            if (data.level == 0)
+                level = 1;
+            else
+                level = data.level;
+            Debug.Log("Loaded tokens: " + data.tokens);
+            tokens = data.tokens;
+
+            Debug.Log("Player tokens after loading: " + tokens);
+
+            xp = data.xp;
+        }
+        else
+        {
+            Debug.LogError("Player data is null during load.");
+        }
+
+            // Icons handling
+            if (data.ownedIcons == null || data.ownedIcons.Length != 2)
         {
             Debug.Log("NULL or invalid ownedIcons data");
             ownedIcons = new int[] { 1, 0 };
@@ -85,6 +101,7 @@ public class Player : MonoBehaviour
         ownedBanners[6] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
 
         playerName = data.playerName;
+        cosmeticItems = data.cosmeticItems;
     }
 
     public void SetPlayerName(string newName)
@@ -95,6 +112,11 @@ public class Player : MonoBehaviour
     public void SetBannerOwnership(int bannerIndex, bool isOwned)
     {
         ownedBanners[bannerIndex] = isOwned ? 1 : 0;
+        // Also update the cosmeticItems list
+        if (cosmeticItems.Count > bannerIndex)
+        {
+            cosmeticItems[bannerIndex].isPurchased = isOwned;
+        }
     }
 
 }

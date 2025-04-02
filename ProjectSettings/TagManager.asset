@@ -11,6 +11,7 @@ TagManager:
   - ExperienceFill
   - LevelText
   - ExperienceText
+  - Tokens
   layers:
   - Default
   - TransparentFX
