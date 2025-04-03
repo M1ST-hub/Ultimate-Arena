@@ -53,8 +53,8 @@ public class ShopUIManager : MonoBehaviour
             // Only instantiate if the item is not purchased (using player's owned items data)
             //if (i == 19)
                 //continue;
-            //item.isPurchased = Player.Instance.ownedBanners[i] == 0 ? false : true;
-            //i++;
+            item.isPurchased = Player.Instance.ownedBanners[i] == 0 ? false : true;
+            i++;
             
             if (item.isPurchased == false)  // Check if the item is not owned
             {

@@ -68,12 +68,12 @@ public class PanelSwitcherManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(firstButtons[currentPanelIndex].gameObject);
         }
 
-        if (inventory.activeInHierarchy && currentPanelIndex >= inventoryPanels.Length)
+        if (inventory != null && inventory.activeInHierarchy && currentPanelIndex >= inventoryPanels.Length)
         {
             currentPanelIndex = 0;
         }
 
-        if (inventory.activeInHierarchy && inventoryfirstButtons[currentPanelIndex] != null)
+        if (inventory != null && inventory.activeInHierarchy && inventoryfirstButtons[currentPanelIndex] != null)
         {
             EventSystem.current.SetSelectedGameObject(inventoryfirstButtons[currentPanelIndex].gameObject);
         }
@@ -127,7 +127,7 @@ public class PanelSwitcherManager : MonoBehaviour
             panels[index].SetActive(true);
         }
 
-        if (inventory.activeInHierarchy)
+        if (inventory != null && inventory.activeInHierarchy)
         {
             foreach (var panel in inventoryPanels)
             {
