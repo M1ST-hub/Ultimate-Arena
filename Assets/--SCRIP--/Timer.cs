@@ -50,17 +50,20 @@ public class Timer : NetworkBehaviour
             if (preGameTimer == true && gameStart == false)
             {
                 gm.GameStartRpc();
+                NetworkObject.Destroy(gameObject);
             }
             else if (preGameTimer == false && postGameTimer == false && gameInProgress == true)
             {
                 gameInProgress = false;
                 gm.GameEndRpc();
                 gameEnd = true;
+                NetworkObject.Destroy(gameObject);
             }
             else if (postGameTimer == true && gameEnd == true)
             {
                 gameEnd = false;
                 gm.GameRestartRpc();
+                NetworkObject.Destroy(gameObject);
             }
 
         }
