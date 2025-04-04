@@ -18,7 +18,6 @@ public class GameManager : NetworkBehaviour
     public GameObject gameTimer;
     public GameObject preGameTimer;
     public GameObject postGameTimer;
-
     public GameObject canvas;
     public bool isGameStarted = false;
 
@@ -202,6 +201,7 @@ public class GameManager : NetworkBehaviour
 
     private void GetPlayers()
     {
+        players.Clear();
         foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
         {
             players.Add(client.PlayerObject.gameObject);
