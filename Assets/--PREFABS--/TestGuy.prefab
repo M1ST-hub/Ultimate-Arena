@@ -470,8 +470,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  sensX: 100
-  sensY: 50
+  sensX: 250
+  sensY: 100
   orientation: {fileID: 3459060028832005621}
   camHolder: {fileID: 8837324269609005105}
   vertLook: 0
@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4101453873
+  GlobalObjectIdHash: 1382309427
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1128,6 +1128,12 @@ MonoBehaviour:
   capCol: {fileID: 0}
   body: {fileID: 2389734486427502412}
   head: {fileID: 8527534947209275200}
+  scoreManager: {fileID: 0}
+  taggerExp: 5
+  surviveExp: 8
+  untaggedTime: 0
+  taggedTime: 0
+  mostTags: 0
   walkSpeed: 7
   sprintSpeed: 9
   slideSpeed: 30

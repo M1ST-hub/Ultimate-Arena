@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class Player : MonoBehaviour
     public List<ItemData> cosmeticItems = new List<ItemData>(); // Add this line
 
     public static Player Instance;
+
+    [InspectorButton("DeletePlayer")]
+        public bool deletePlayer;
 
     private void Awake()
     {
@@ -33,7 +37,6 @@ public class Player : MonoBehaviour
         LoadPlayer();
     }
 
-    [ContextMenu("DeletePlayer")]
     public void DeletePlayer()
     {
         PlayerSaveManager.DeletePlayer();
@@ -74,8 +77,7 @@ public class Player : MonoBehaviour
             Debug.Log("NULL or invalid ownedIcons data");
             ownedIcons = new int[] { 1, 0 };
         }
-        
-        if (data.ownedIcons.Length != ownedIcons.Length)
+        else if (data.ownedIcons.Length != ownedIcons.Length)
         {
             int[] temp = new int[19];
             ownedIcons.CopyTo(temp, 0);
@@ -92,8 +94,7 @@ public class Player : MonoBehaviour
         {
             ownedBanners = new int[19];
         }
-        
-        if (data.ownedBanners.Length != ownedBanners.Length)
+        else if (data.ownedBanners.Length != ownedBanners.Length)
         {
             int[] temp = new int[19];
             ownedBanners.CopyTo(temp, 0);
