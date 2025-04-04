@@ -68,18 +68,18 @@ public class Player : MonoBehaviour
             Debug.LogError("Player data is null during load.");
         }
 
-            // Icons handling
-            if (data.ownedIcons == null || data.ownedIcons.Length != 2)
+        // Icons handling
+        if (data.ownedIcons == null || data.ownedIcons.Length != 2)
         {
             Debug.Log("NULL or invalid ownedIcons data");
             ownedIcons = new int[] { 1, 0 };
         }
-        else if (data.ownedBanners.Length != ownedBanners.Length)
+        else if (data.ownedIcons.Length != ownedIcons.Length)
         {
             int[] temp = new int[19];
-            ownedBanners.CopyTo(temp, 0);
-            ownedBanners = temp;
-            ownedBanners = data.ownedBanners;
+            ownedIcons.CopyTo(temp, 0);
+            ownedIcons = temp;
+            ownedIcons = data.ownedIcons;
         }
         else
         {
@@ -91,11 +91,18 @@ public class Player : MonoBehaviour
         {
             ownedBanners = data.ownedBanners;
         }
+        else if (data.ownedBanners.Length != ownedBanners.Length)
+        {
+            int[] temp = new int[19];
+            ownedBanners.CopyTo(temp, 0);
+            ownedBanners = temp;
+            ownedBanners = data.ownedBanners;
+        }
         else
         {
             // Default owned banners if the data is null
             ownedBanners = new int[19];  // Default to all unowned
-             // Example: Set some as owned by default
+                                         // Example: Set some as owned by default
         }
 
         ownedBanners[6] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
