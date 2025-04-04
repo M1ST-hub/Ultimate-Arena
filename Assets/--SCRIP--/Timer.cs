@@ -53,6 +53,7 @@ public class Timer : NetworkBehaviour
             }
             else if (preGameTimer == false && postGameTimer == false && gameInProgress == true)
             {
+                gameInProgress = false;
                 gm.GameEndRpc();
             }
             else if (postGameTimer == true)
