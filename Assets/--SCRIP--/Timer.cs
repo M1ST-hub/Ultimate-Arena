@@ -55,9 +55,11 @@ public class Timer : NetworkBehaviour
             {
                 gameInProgress = false;
                 gm.GameEndRpc();
+                gameEnd = true;
             }
-            else if (postGameTimer == true)
+            else if (postGameTimer == true && gameEnd == true)
             {
+                gameEnd = false;
                 gm.GameRestartRpc();
             }
 
