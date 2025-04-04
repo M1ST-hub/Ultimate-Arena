@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Entities;
 using UnityEditor.PackageManager;
+using TMPro;
 
 public class GameManager : NetworkBehaviour
 {
@@ -12,16 +13,25 @@ public class GameManager : NetworkBehaviour
     public GameObject[] spawnPoints;
     public GameObject[] endPoints;
     public GameObject[] restartPoints;
+
+    [Header("Timers")]
     public GameObject gameTimer;
     public GameObject preGameTimer;
     public GameObject postGameTimer;
+
     public GameObject canvas;
     public bool isGameStarted = false;
+
+    [Header("Podium")]
+    public TextMeshProUGUI pod1;
+    public TextMeshProUGUI pod2;
+    public TextMeshProUGUI pod3;
 
     private GameObject timmy;
     private GameObject playTime;
     private GameObject endTimer;
 
+    [Header("Xp")]
     public int gainedExperience;
     public int surviveExperience;
 
@@ -158,6 +168,9 @@ public class GameManager : NetworkBehaviour
 
         foreach (PlayerController playerController in sortedPlayers)
         {
+            pod1.text = $"{playerController.name} - Tags: {playerController.mostTags}";
+            pod2.text = $"Tagged Time: {playerController.taggedTime}";
+            pod3.text = $"Untagged Time: {playerController.untaggedTime}";
             Debug.Log($"{playerController.name} - Tags: {playerController.mostTags}, Tagged Time: {playerController.taggedTime}, Untagged Time: {playerController.untaggedTime}");
         }
     }
