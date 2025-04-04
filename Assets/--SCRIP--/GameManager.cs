@@ -269,25 +269,37 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void SpawnTimerRpc()
     {
-        timmy = Instantiate(preGameTimer, canvas.transform);
-        timmy.GetComponent<NetworkObject>().Spawn();
-        timmy.transform.SetParent(canvas.transform);
+        
+        if (IsServer)
+        {
+            timmy = Instantiate(preGameTimer, canvas.transform);
+            timmy.GetComponent<NetworkObject>().Spawn();
+            timmy.transform.SetParent(canvas.transform);
+        }
+        
     }
 
     [Rpc(SendTo.Everyone)]
     public void SpawnGameTimerRpc()
     {
-        playTime = Instantiate(gameTimer, canvas.transform);
-        playTime.GetComponent<NetworkObject>().Spawn();
-        playTime.transform.SetParent(canvas.transform);
+        if (IsServer)
+        {
+            playTime = Instantiate(gameTimer, canvas.transform);
+            playTime.GetComponent<NetworkObject>().Spawn();
+            playTime.transform.SetParent(canvas.transform);
+        }
+        
     }
 
     [Rpc(SendTo.Everyone)]
     public void SpawnPostGameTimerRpc()
     {
-        endTimer = Instantiate(postGameTimer, canvas.transform);
-        endTimer.GetComponent<NetworkObject>().Spawn();
-        endTimer.transform.SetParent(canvas.transform);
+        if (IsServer)
+        {
+            endTimer = Instantiate(postGameTimer, canvas.transform);
+            endTimer.GetComponent<NetworkObject>().Spawn();
+            endTimer.transform.SetParent(canvas.transform);
+        }
     }
 
 
