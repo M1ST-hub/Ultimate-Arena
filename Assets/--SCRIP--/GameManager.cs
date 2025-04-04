@@ -91,12 +91,13 @@ public class GameManager : NetworkBehaviour
             player.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
 
-        Destroy(timmy);
+        //Destroy(timmy);
 
         if (IsServer)
             FirstTaggerRpc();
-
-        SpawnGameTimerRpc();
+        
+        if (IsServer)
+            SpawnGameTimerRpc();
 
         Timer.gameStart = true;
 
@@ -114,9 +115,9 @@ public class GameManager : NetworkBehaviour
             player.transform.position = endPoints[Random.Range(0, endPoints.Length)].transform.position;
         }
 
-        Destroy(playTime);
-
-        SpawnPostGameTimerRpc();
+        //Destroy(playTime);
+        if (IsServer)
+            SpawnPostGameTimerRpc();
 
         if (arrow != null)
             Destroy(arrow);
@@ -165,13 +166,57 @@ public class GameManager : NetworkBehaviour
     {
         Debug.Log($"Sorted by {criteria}:");
 
-        foreach (PlayerController playerController in sortedPlayers)
+        if(criteria == "Most Tags")
         {
-            pod1.text = $"{playerController.name} - Tags: {playerController.mostTags}";
-            pod2.text = $"Tagged Time: {playerController.taggedTime}";
-            pod3.text = $"Untagged Time: {playerController.untaggedTime}";
-            Debug.Log($"{playerController.name} - Tags: {playerController.mostTags}, Tagged Time: {playerController.taggedTime}, Untagged Time: {playerController.untaggedTime}");
+            string mostTaggedPlayer = "";
+            int mostTags = 0;
+            foreach (PlayerController playerController in sortedPlayers)
+            {
+
+                if (playerController.mostTags > mostTags)
+                {
+                    mostTaggedPlayer = playerController.name;
+                    mostTags = playerController.mostTags;
+                }
+            }
+
+            pod1.text = $"{mostTaggedPlayer} - Tags: {mostTags}";
         }
+        
+        if (criteria == "Untagged Time")
+        {
+            string longestSurvivor = "";
+            float surviveTime = 0;
+            foreach (PlayerController playerController in sortedPlayers)
+            {
+
+                if (playerController.untaggedTime > surviveTime)
+                {
+                    longestSurvivor = playerController.name;
+                    surviveTime = playerController.untaggedTime;
+                }
+            }
+
+            pod2.text = $"{longestSurvivor} - Tags: {surviveTime}";
+        }
+
+        if (criteria == "Tagged Time")
+        {
+            string taggedTime = "";
+            float mostTagTime = 0;
+            foreach (PlayerController playerController in sortedPlayers)
+            {
+
+                if (playerController.taggedTime > mostTagTime)
+                {
+                    taggedTime = playerController.name;
+                    mostTagTime = playerController.taggedTime;
+                }
+            }
+
+            pod3.text = $"{taggedTime} - Tags: {mostTagTime}";
+        }
+
     }
 
 
@@ -185,9 +230,9 @@ public class GameManager : NetworkBehaviour
             player.transform.position = restartPoints[Random.Range(0, restartPoints.Length)].transform.position;
         }
 
-        Destroy(endTimer);
-
-        SpawnTimerRpc();
+        //Destroy(endTimer);
+        if (IsServer)
+            SpawnTimerRpc();
 
         if (arrow != null)
             Destroy(arrow);
