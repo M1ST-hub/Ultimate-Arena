@@ -197,7 +197,7 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
-            pod2.text = $"{longestSurvivor} - Tags: {surviveTime}";
+            pod2.text = $"{longestSurvivor} - Time Untagged: {surviveTime}";
         }
 
         if (criteria == "Tagged Time")
@@ -214,7 +214,7 @@ public class GameManager : NetworkBehaviour
                 }
             }
 
-            pod3.text = $"{taggedTime} - Tags: {mostTagTime}";
+            pod3.text = $"{taggedTime} - Time Tagged: {mostTagTime}";
         }
 
     }
