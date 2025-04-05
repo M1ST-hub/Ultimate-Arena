@@ -11,8 +11,6 @@ public class PlayerData
     public int[] ownedIcons = new int[2];
     public string playerName;
 
-    public List<ItemData> cosmeticItems = new List<ItemData>(); // Add this line
-
     public PlayerData(Player player)
     {
         ownedIcons = player.ownedIcons;
@@ -21,7 +19,6 @@ public class PlayerData
         tokens = player.tokens;
         playerName = player.playerName;
         xp = player.xp;
-        cosmeticItems = player.cosmeticItems;
     }
 
     public PlayerData()

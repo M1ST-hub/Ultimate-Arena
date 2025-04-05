@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.Services.CloudSave.Models;
+using Unity.Services.CloudSave.Models.Data.Player;
 using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
@@ -9,8 +11,14 @@ public class ShopUIManager : MonoBehaviour
 {
     public GameObject itemPrefab;  // The single item prefab
     public Transform cosmeticContent;  // Content panel for the cosmetic shop
+    public Transform inventoryContent;
     public GameObject shopPanel;
+    public GameObject inventoryPanel;
     public TextMeshProUGUI tokensText;
+
+    public GameObject menuBanner;
+    public GameObject accBanner;
+
     public List<ItemData> cosmeticItems = new List<ItemData>();  // List of items in the cosmetic shop
 
     
@@ -18,6 +26,7 @@ public class ShopUIManager : MonoBehaviour
     void Start()
     {
         shopPanel.SetActive(false);
+        inventoryPanel.SetActive(false);
     }
 
     public void ToggleShopPanel()
@@ -33,6 +42,22 @@ public class ShopUIManager : MonoBehaviour
         if (!isActive)
         {
             PopulatePanel(cosmeticContent, cosmeticItems);
+        }
+    }
+
+    public void ToggleInventoryPanel()
+    {
+        bool isActive = inventoryPanel.activeSelf;
+
+
+        // Toggle the shop panel visibility
+        inventoryPanel.SetActive(!isActive);
+        Debug.Log("happ");
+
+        // When re-enabling, restore the scrollbar value
+        if (!isActive)
+        {
+            PopulateInventory(inventoryContent, cosmeticItems);
         }
     }
 
@@ -85,6 +110,59 @@ public class ShopUIManager : MonoBehaviour
 
     }
 
+    void PopulateInventory(Transform content, List<ItemData> items)
+    {
+        foreach (Transform child in content)
+        {
+            Destroy(child.gameObject);
+        }
+
+
+        int i = 0;
+        // Loop through each cosmetic item and instantiate the UI elements
+        foreach (ItemData item in items)
+        {
+            //Debug.Log(i);
+            // Only instantiate if the item is not purchased (using player's owned items data)
+            //if (i == 19)
+            //continue;
+            item.isPurchased = Player.Instance.ownedBanners[i] == 0 ? false : true;
+            i++;
+
+            if (item.isPurchased == true)  // Check if the item is  owned
+            {
+                GameObject itemObj = Instantiate(itemPrefab, content);  // Instantiate the single prefab
+
+                // Find and set components inside the prefab
+                itemObj.GetComponentInChildren<TextMeshProUGUI>().text = item.name;  // Set the item name
+                itemObj.GetComponentInChildren<Image>().sprite = item.Image;  // Set the item icon
+
+                Button equipButton = itemObj.GetComponentInChildren<Button>();
+                equipButton.onClick.RemoveAllListeners();  // Ensure no previous listeners are attached
+                equipButton.onClick.AddListener(() => EquipCos(item));  
+
+                // Optionally, you can change the button text depending on whether the item is purchased
+                TextMeshProUGUI buttonText = equipButton.GetComponentInChildren<TextMeshProUGUI>();
+                buttonText.text = "Equip";
+
+                Debug.Log("Display content");
+            }
+
+            /*if (Player.Instance.ownedBanners[item.itemID] == 1)
+            {
+                Debug.Log("owned all banners");
+                Player.Instance.ownedBanners[item.itemID] = 0;
+            }*/
+        }
+
+    }
+
+    void EquipCos(ItemData item)
+    {
+        item.equipped = true;
+        //menuBanner.GetComponent(Image).sprite = item.Image;
+    }
+
     // Handle the purchase action
     void PurchaseItem(ItemData item)
     {
@@ -100,8 +178,6 @@ public class ShopUIManager : MonoBehaviour
             item.isPurchased = true;
             Player.Instance.tokens -= (int)item.itemPrice;
             Debug.Log("Item purchased: " + item.name);
-
-            Player.Instance.SetBannerOwnership(item.itemID, true);
             // Remove the item from the shop (i.e., repopulate the shop UI)
 
             Player.Instance.SavePlayer();
@@ -138,4 +214,5 @@ public class ItemData
     public Sprite Image;
     public float itemPrice;  // Adding price for purchase
     public bool isPurchased;  // To track if the item is already purchased
+    public bool equipped;
 }

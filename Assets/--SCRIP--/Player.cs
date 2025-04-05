@@ -10,8 +10,7 @@ public class Player : MonoBehaviour
     public int[] ownedBanners = new int[19];
     public int[] ownedIcons = new int[2];
     public string playerName;
-
-    public List<ItemData> cosmeticItems = new List<ItemData>(); // Add this line
+    public int currentBanner;
 
     public static Player Instance;
 
@@ -111,22 +110,11 @@ public class Player : MonoBehaviour
         ownedBanners[6] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
 
         playerName = data.playerName;
-        cosmeticItems = data.cosmeticItems;
     }
 
     public void SetPlayerName(string newName)
     {
         playerName = newName;
-    }
-
-    public void SetBannerOwnership(int bannerIndex, bool isOwned)
-    {
-        ownedBanners[bannerIndex] = isOwned ? 1 : 0;
-        // Also update the cosmeticItems list
-        if (cosmeticItems.Count > bannerIndex)
-        {
-            cosmeticItems[bannerIndex].isPurchased = isOwned;
-        }
     }
 
 }
