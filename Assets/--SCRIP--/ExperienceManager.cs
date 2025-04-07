@@ -16,8 +16,10 @@ public class ExperienceManager : MonoBehaviour
 
     [Header("Interface")]
     [SerializeField] TextMeshProUGUI levelText;
+    //[SerializeField] TextMeshProUGUI accLevelText;
     [SerializeField] TextMeshProUGUI experienceText;
     [SerializeField] Image experienceFill;
+    //[SerializeField] GameObject accPanel;
 
     // Singleton Instance
     public static ExperienceManager Instance { get; private set; }
@@ -152,6 +154,7 @@ public class ExperienceManager : MonoBehaviour
             int end = Mathf.Max(0, nextLevelsExp - previousLevelsExp);      // Ensure end XP is not negative
 
             levelText.text = currentLevel.ToString();
+            //accLevelText.text = currentLevel.ToString();
 
             // Update the experience text
             experienceText.text = $"{start}exp / {end} exp";
@@ -163,12 +166,26 @@ public class ExperienceManager : MonoBehaviour
 
     void AssignUIComponents()
     {
+        /*if (accPanel == null)
+        {
+            accPanel = GameObject.FindGameObjectWithTag("AccountPanel");
+        }*/
+
         // If the UI components are not assigned, attempt to find them using tags
         if (levelText == null)
         {
             GameObject levelObject = GameObject.FindGameObjectWithTag("LevelText");
             if (levelObject != null) levelText = levelObject.GetComponent<TextMeshProUGUI>();
         }
+        
+        /*if (accLevelText == null)
+        {
+            GameObject levelObject = GameObject.FindGameObjectWithTag("AccLevelText");
+            if (accPanel.activeInHierarchy)
+            {
+                if (levelObject != null) accLevelText = levelObject.GetComponent<TextMeshProUGUI>();
+            }
+        }*/
 
         if (experienceText == null)
         {

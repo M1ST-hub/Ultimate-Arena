@@ -1,14 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Unity.Netcode;
-using Unity.Entities;
-using UnityEditor.PackageManager;
 using TMPro;
+using Unity.Netcode;
+using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    public  List <GameObject> players;
+    public List<GameObject> players;
     public GameObject itArrow;
     public GameObject[] spawnPoints;
     public GameObject[] endPoints;
@@ -25,6 +22,12 @@ public class GameManager : NetworkBehaviour
     public TextMeshProUGUI pod1;
     public TextMeshProUGUI pod2;
     public TextMeshProUGUI pod3;
+    public string mostTaggedPlayer = "";
+    public int mostTags = 0;
+    public string longestSurvivor = "";
+    public float surviveTime = 0;
+    public string taggedTime = "";
+    public float mostTagTime = 0;
 
     private GameObject timmy;
     private GameObject playTime;
@@ -35,7 +38,7 @@ public class GameManager : NetworkBehaviour
     public int surviveExperience;
 
     private PlayerController playerController;
-    public static GameManager Instance {  get; private set; }
+    public static GameManager Instance { get; private set; }
 
     private GameObject arrow;
 
@@ -58,9 +61,9 @@ public class GameManager : NetworkBehaviour
         //NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
     }
 
-    void Update() 
+    void Update()
     {
-        
+
     }
 
     [Rpc(SendTo.Everyone)]
@@ -71,13 +74,13 @@ public class GameManager : NetworkBehaviour
         if (IsServer)
         {
             GameObject randomPlayer = players[Random.Range(0, players.Count)];
-            arrow =  Instantiate(itArrow, randomPlayer.transform);
-            
+            arrow = Instantiate(itArrow, randomPlayer.transform);
+
             arrow.GetComponent<NetworkObject>().Spawn();
             arrow.transform.SetParent(randomPlayer.transform);
-            
+
         }
-            
+
     }
 
 
@@ -95,7 +98,7 @@ public class GameManager : NetworkBehaviour
 
         if (IsServer)
             FirstTaggerRpc();
-        
+
         if (IsServer)
             SpawnGameTimerRpc();
 
@@ -166,10 +169,8 @@ public class GameManager : NetworkBehaviour
     {
         Debug.Log($"Sorted by {criteria}:");
 
-        if(criteria == "Most Tags")
+        if (criteria == "Most Tags")
         {
-            string mostTaggedPlayer = "";
-            int mostTags = 0;
             foreach (PlayerController playerController in sortedPlayers)
             {
 
@@ -182,11 +183,9 @@ public class GameManager : NetworkBehaviour
 
             pod1.text = $"{mostTaggedPlayer} - Tags: {mostTags}";
         }
-        
+
         if (criteria == "Untagged Time")
         {
-            string longestSurvivor = "";
-            float surviveTime = 0;
             foreach (PlayerController playerController in sortedPlayers)
             {
 
@@ -202,8 +201,6 @@ public class GameManager : NetworkBehaviour
 
         if (criteria == "Tagged Time")
         {
-            string taggedTime = "";
-            float mostTagTime = 0;
             foreach (PlayerController playerController in sortedPlayers)
             {
 
@@ -263,20 +260,20 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-       // NetworkManager.ConnectedClientsIds;
+        // NetworkManager.ConnectedClientsIds;
     }
 
     [Rpc(SendTo.Everyone)]
     public void SpawnTimerRpc()
     {
-        
+
         if (IsServer)
         {
             timmy = Instantiate(preGameTimer, canvas.transform);
             timmy.GetComponent<NetworkObject>().Spawn();
             timmy.transform.SetParent(canvas.transform);
         }
-        
+
     }
 
     [Rpc(SendTo.Everyone)]
@@ -288,7 +285,7 @@ public class GameManager : NetworkBehaviour
             playTime.GetComponent<NetworkObject>().Spawn();
             playTime.transform.SetParent(canvas.transform);
         }
-        
+
     }
 
     [Rpc(SendTo.Everyone)]

@@ -477,6 +477,7 @@ public class PlayerController : NetworkBehaviour
             }
 
             GameManager.Instance.gainedExperience += 30;
+            GameManager.Instance.mostTags = mostTags++;
 
             //string taggedPlayerName = other.gameObject.name;
             //scoreManager.IncrementScore(taggedPlayerName);

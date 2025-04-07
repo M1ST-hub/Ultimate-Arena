@@ -12,6 +12,8 @@ TagManager:
   - LevelText
   - ExperienceText
   - Tokens
+  - AccLevelText
+  - AccountPanel
   layers:
   - Default
   - TransparentFX
