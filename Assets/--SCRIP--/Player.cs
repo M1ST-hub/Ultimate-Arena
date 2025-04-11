@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
         }
 
         ownedBanners[6] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
-
+        currentBanner = data.currentBanner;
         playerName = data.playerName;
     }
 

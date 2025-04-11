@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class ShopUIManager : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class ShopUIManager : MonoBehaviour
     {
         shopPanel.SetActive(false);
         inventoryPanel.SetActive(false);
+        menuBanner.GetComponent<Image>().sprite = cosmeticItems[Player.Instance.currentBanner].Image;
+        accBanner.GetComponent<Image>().sprite = cosmeticItems[Player.Instance.currentBanner].Image;
     }
 
     public void ToggleShopPanel()
@@ -160,7 +163,10 @@ public class ShopUIManager : MonoBehaviour
     void EquipCos(ItemData item)
     {
         item.equipped = true;
-        //menuBanner.GetComponent(Image).sprite = item.Image;
+        menuBanner.GetComponent<Image>().sprite = item.Image;
+        accBanner.GetComponent<Image>().sprite = item.Image;
+        Player.Instance.currentBanner = item.itemID;
+        Player.Instance.SavePlayer();
     }
 
     // Handle the purchase action
@@ -175,9 +181,12 @@ public class ShopUIManager : MonoBehaviour
 
         if (CanAffordItem(item))
         {
-            item.isPurchased = true;
             Player.Instance.tokens -= (int)item.itemPrice;
-            Debug.Log("Item purchased: " + item.name);
+            
+            item.isPurchased = true;
+            Debug.Log("Item purchased: " + item.isPurchased);
+            Player.Instance.ownedBanners[item.itemID] = 1;
+            
             // Remove the item from the shop (i.e., repopulate the shop UI)
 
             Player.Instance.SavePlayer();
