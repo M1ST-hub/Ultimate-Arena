@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
@@ -107,10 +108,35 @@ public class GameManager : NetworkBehaviour
         Debug.Log("GameStart");
     }
 
+    private IEnumerator DelayedPlayerStats()
+    {
+        yield return new WaitForSeconds(0.5f); // Give a moment for networked values to sync
+        PlayerStats();
+    }
 
     [Rpc(SendTo.Everyone)]
     public void GameEndRpc()
     {
+        StartCoroutine(DelayedPlayerStats());
+
+        if (players.Count == 0)
+        {
+            Debug.LogError("No players found in the players list.");
+            return; // Prevent further processing if no players exist.
+        }
+
+        foreach (var player in players)
+        {
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            if (playerController == null)
+            {
+                Debug.LogWarning($"PlayerController not found for {player.name}");
+                continue; // Skip this player if PlayerController is not found
+            }
+
+            SaveXpFromPlayer(playerController);
+        }
+
         GetPlayers();
 
         foreach (GameObject player in players)
@@ -118,7 +144,6 @@ public class GameManager : NetworkBehaviour
             player.transform.position = endPoints[Random.Range(0, endPoints.Length)].transform.position;
         }
 
-        //Destroy(playTime);
         if (IsServer)
             SpawnPostGameTimerRpc();
 
@@ -127,16 +152,25 @@ public class GameManager : NetworkBehaviour
 
         gainedExperience = gainedExperience + 50;
 
-        CalculateExp();
+        Player.Instance.SavePlayer();
         PlayerStats();
 
         Debug.Log("GameEnd");
     }
 
-    public void CalculateExp()
+    public void SaveXpFromPlayer(PlayerController pc)
     {
-        ExperienceManager.Instance.AddExperience(gainedExperience * (1 / 3));
+        // Ensure that only the local player (the one who owns the PlayerController) is saving their XP
+        if (pc.IsOwner)
+        {
+            // Add the player's current XP to the global Player instance
+            Player.Instance.xp += pc.currentXp.Value;
+
+            // Save the player's XP using the SavePlayer method (make sure this is set up to persist the data)
+            Player.Instance.SavePlayer();
+        }
     }
+
 
     public void PlayerStats()
     {
@@ -145,24 +179,32 @@ public class GameManager : NetworkBehaviour
         // Gather stats for all players
         foreach (GameObject player in players)
         {
-            PlayerController playerController = player.GetComponent<PlayerController>();
-            if (playerController != null)
-            {
-                playerControllers.Add(playerController);
-            }
+            PlayerController pc = player.GetComponent<PlayerController>();
+            if (pc == null) continue;
+            
+            playerControllers.Add(pc);
+            
+            float tagged = pc.netTaggedTime.Value;
+            float untagged = pc.netUntaggedTime.Value;
+
+            Debug.Log($"{pc.DisplayName} — Tagged: {tagged:F1}s, Untagged: {untagged:F1}s");
         }
 
-        // Sort players by the most tags
-        playerControllers.Sort((a, b) => b.mostTags.CompareTo(a.mostTags)); // Sort descending by mostTags
+        if (playerControllers.Count == 0)
+        {
+            Debug.LogError("No valid PlayerControllers found.");
+            return;
+        }
+
+        // Now sort and display
+        playerControllers.Sort((a, b) => b.mostTags.CompareTo(a.mostTags));
         DisplaySortedPlayers("Most Tags", playerControllers);
 
-        // Sort players by tagged time
-        playerControllers.Sort((a, b) => b.taggedTime.CompareTo(a.taggedTime)); // Sort descending by taggedTime
-        DisplaySortedPlayers("Most Tagged Time", playerControllers);
+        playerControllers.Sort((a, b) => b.taggedTime.CompareTo(a.taggedTime));
+        DisplaySortedPlayers("Tagged Time", playerControllers);
 
-        // Sort players by untagged time
-        playerControllers.Sort((a, b) => b.untaggedTime.CompareTo(a.untaggedTime)); // Sort descending by untaggedTime
-        DisplaySortedPlayers("Most Untagged Time", playerControllers);
+        playerControllers.Sort((a, b) => b.untaggedTime.CompareTo(a.untaggedTime));
+        DisplaySortedPlayers("Untagged Time", playerControllers);
     }
 
     private void DisplaySortedPlayers(string criteria, List<PlayerController> sortedPlayers)
@@ -173,49 +215,44 @@ public class GameManager : NetworkBehaviour
         {
             foreach (PlayerController playerController in sortedPlayers)
             {
-
-                if (playerController.mostTags > mostTags)
+                if (playerController.mostTags >= mostTags)
                 {
-                    mostTaggedPlayer = playerController.name;
+                    mostTaggedPlayer = playerController.DisplayName; // use a proper display name
                     mostTags = playerController.mostTags;
                 }
             }
 
-            pod1.text = $"{mostTaggedPlayer} - Tags: {mostTags}";
+            pod2.text = $"{mostTaggedPlayer} - Tags: {mostTags}";
         }
 
-        if (criteria == "Untagged Time")
+        if (criteria == "Most Untagged Time")
         {
             foreach (PlayerController playerController in sortedPlayers)
             {
-
-                if (playerController.untaggedTime > surviveTime)
+                if (playerController.untaggedTime >= surviveTime)
                 {
-                    longestSurvivor = playerController.name;
+                    longestSurvivor = playerController.DisplayName;
                     surviveTime = playerController.untaggedTime;
                 }
             }
 
-            pod2.text = $"{longestSurvivor} - Time Untagged: {surviveTime}";
+            pod1.text = $"{longestSurvivor} - Time Untagged: {surviveTime:F2}s";
         }
 
-        if (criteria == "Tagged Time")
+        if (criteria == "Most Tagged Time")
         {
             foreach (PlayerController playerController in sortedPlayers)
             {
-
-                if (playerController.taggedTime > mostTagTime)
+                if (playerController.taggedTime >= mostTagTime)
                 {
-                    taggedTime = playerController.name;
+                    taggedTime = playerController.DisplayName;
                     mostTagTime = playerController.taggedTime;
                 }
             }
 
-            pod3.text = $"{taggedTime} - Time Tagged: {mostTagTime}";
+            pod3.text = $"{taggedTime} - Time Tagged: {mostTagTime:F2}s";
         }
-
     }
-
 
     [Rpc(SendTo.Everyone)]
     public void GameRestartRpc()
@@ -238,16 +275,58 @@ public class GameManager : NetworkBehaviour
 
         gainedExperience = 0;
 
+        mostTaggedPlayer = "";
+        mostTags = 0;
+        longestSurvivor = "";
+        surviveTime = 0;
+        taggedTime = "";
+        mostTagTime = 0;
+
         Debug.Log("Game Restarted");
     }
 
     private void GetPlayers()
     {
         players.Clear();
+
+        if (NetworkManager.Singleton == null || NetworkManager.Singleton.ConnectedClientsList == null)
+        {
+            Debug.LogError("NetworkManager or ConnectedClientsList is null.");
+            return;
+        }
+
         foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
         {
-            players.Add(client.PlayerObject.gameObject);
+            if (client.PlayerObject != null)
+            {
+                players.Add(client.PlayerObject.gameObject);
+
+                // Check if PlayerController is attached to the player object
+                PlayerController playerController = client.PlayerObject.GetComponent<PlayerController>();
+                if (playerController == null)
+                {
+                    Debug.LogWarning($"PlayerController not found for client {client.ClientId} (Player: {client.PlayerObject.name})");
+                }
+                else
+                {
+                    Debug.Log($"PlayerController found for client {client.ClientId} (Player: {client.PlayerObject.name})");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"PlayerObject not found for client {client.ClientId}");
+            }
         }
+
+        if (players.Count == 0)
+        {
+            Debug.LogError("No players found in ConnectedClientsList.");
+        }
+
+        /*foreach (NetworkClient client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            players.Add(client.PlayerObject.gameObject);
+        }*/
     }
 
     private void PlayerJoined(ulong clientId)

@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -86,6 +87,15 @@ public class PlayerController : NetworkBehaviour
 
     public PlayerInput playerInput;
 
+    public NetworkVariable<FixedString64Bytes> networkedPlayerName = new NetworkVariable<FixedString64Bytes>();
+
+    public NetworkVariable<float> netTaggedTime = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<float> netUntaggedTime = new NetworkVariable<float>(0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> currentXp = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    public string DisplayName =>
+    networkedPlayerName.Value.IsEmpty ? $"Player_{OwnerClientId}" : networkedPlayerName.Value.ToString();
+
     public bool isPaused;
 
     public PauseManager pauseManager;
@@ -137,6 +147,15 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            string localName = Player.Instance.playerName;
+            SetPlayerNameServerRpc(localName);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.magenta;
@@ -170,40 +189,23 @@ public class PlayerController : NetworkBehaviour
                 playerInput.SwitchCurrentActionMap("Player");
             }
 
-            if (isTagger == true)
+            if (isTagger)
             {
                 taggedTime += Time.deltaTime;
+                netTaggedTime.Value = taggedTime;
 
-                // Calculate the experience gained as 2/3 of the tagged time
-                int experienceGained = (int)((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
-
-                // Add the experience gained to the GameManager's total experience
-                GameManager.Instance.gainedExperience += experienceGained;
-
-                // Debugging line to check the XP gained and tagged time
-                //Debug.Log($"XP Gained (Tagger): {experienceGained}, Tagged Time: {taggedTime}");
-            }
-
-            if (isTagger == false)
-            {
-                untaggedMult += Time.deltaTime;
-                untaggedTime += Time.deltaTime;
-
-                // Increase the multiplier based on how long the player has been untagged
-                multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
-
-                // Calculate the experience gained (base XP * multiplier * time)
-                int experienceGained = (int)(surviveExp * multiplier * Time.deltaTime);
-                GameManager.Instance.gainedExperience += experienceGained;
-
-                // Debugging line to check the XP and multiplier
-                //Debug.Log($"XP Gained: {experienceGained}, Multiplier: {multiplier}");
+                int xpGain = Mathf.RoundToInt((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
+                currentXp.Value += xpGain;
             }
             else
             {
-                // Reset untagged time when the player is tagged
-                untaggedMult = 0f;
-                multiplier = 1f;  // Reset multiplier when tagged
+                untaggedMult += Time.deltaTime;
+                untaggedTime += Time.deltaTime;
+                netUntaggedTime.Value = untaggedTime;
+
+                multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
+                int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
+                currentXp.Value += xpGain;
             }
         }
 
@@ -496,6 +498,12 @@ public class PlayerController : NetworkBehaviour
             TheItArrow.Instance.transform.SetParent(GameManager.Instance.players[taggedPlayer].transform);
             Debug.Log("Switched Arrow");
         }
+    }
+
+    [ServerRpc]
+    private void SetPlayerNameServerRpc(string name)
+    {
+        networkedPlayerName.Value = name;
     }
 
     private void ResetTag()
