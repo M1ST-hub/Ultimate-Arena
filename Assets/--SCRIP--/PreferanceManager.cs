@@ -4,6 +4,7 @@ public class PreferanceManager : MonoBehaviour
 {
 
     public float fov;
+    public float deadzone;
 
 
     private static PreferanceManager instance;
@@ -38,5 +39,9 @@ public class PreferanceManager : MonoBehaviour
     public void SetFOVValue(float value)
     {
         PlayerPrefs.SetFloat("FOV", value);
+    }
+    public void SetDeadzone(float value)
+    {
+        PlayerPrefs.SetFloat("Deadzone", value);
     }
 }

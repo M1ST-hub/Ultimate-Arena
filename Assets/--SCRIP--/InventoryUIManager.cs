@@ -1,16 +1,22 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class InventoryUIManager : MonoBehaviour
+public class StickDebug : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public InputActionReference leftStickRef;
+    public InputActionReference rightStickRef;
+
+    void OnEnable()
     {
-        
+        leftStickRef.action.Enable();
+        rightStickRef.action.Enable();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        Vector2 left = leftStickRef.action.ReadValue<Vector2>();
+        Vector2 right = rightStickRef.action.ReadValue<Vector2>();
+
+        Debug.Log($"Left Stick: {left} | Right Stick: {right}");
     }
 }

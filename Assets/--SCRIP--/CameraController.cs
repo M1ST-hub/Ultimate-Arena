@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
-using DG.Tweening;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class CameraController : NetworkBehaviour
 {
-    public float sensX;
-    public float sensY;
+    public float mouseSensX;
+    public float mouseSensY;
+    public float controllerSensX;
+    public float controllerSensY;
 
     public Transform orientation;
     public Transform camHolder;
@@ -22,49 +22,72 @@ public class CameraController : NetworkBehaviour
 
     private Camera mainCamera;
 
+    private float rightDeadzone = 0.2f;
 
-    // Start is called before the first frame update
     void Start()
     {
         mainCamera = GetComponent<Camera>();
+
         if (IsOwner)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
-           
-           mainCamera.enabled = false;
-           GetComponent<AudioListener>().enabled = false;
+            mainCamera.enabled = false;
+            GetComponent<AudioListener>().enabled = false;
         }
 
+        // Load the initial settings for FOV and sensitivities
         mainCamera.fieldOfView = PlayerPrefs.GetFloat("FOV", 80f);
-        
+
+        // Load initial sensitivity values from PlayerPrefs
+        LoadSensitivitySettings();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (IsOwner)
-        {
-            float mouseX = horizLook * Time.deltaTime * sensX;
-            float mouseY = vertLook * Time.deltaTime * sensY;
+        // Re-load the sensitivity values from PlayerPrefs in case they were changed during gameplay (from the UI)
+        LoadSensitivitySettings();
 
-            yRotation += mouseX;
+        if (!IsOwner) return;
 
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        // Handle mouse and controller inputs for camera rotation
+        float mouseX = horizLook * Time.deltaTime * mouseSensX;
+        float mouseY = vertLook * Time.deltaTime * mouseSensY;
 
-            //can rotate
-            camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-            orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-        }
+        float controllerX = horizLook * Time.deltaTime * controllerSensX;
+        float controllerY = vertLook * Time.deltaTime * controllerSensY;
 
+        // Combine both mouse and controller inputs
+        float xRotationInput = (mouseX != 0) ? mouseX : controllerX;
+        float yRotationInput = (mouseY != 0) ? mouseY : controllerY;
+
+        yRotation += xRotationInput;
+        xRotation -= yRotationInput;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void OnLook(InputValue context)
+    {
+        Vector2 rawInput = context.Get<Vector2>();
+        Vector2 filteredInput = ApplyDeadzone(rawInput, rightDeadzone);
+
+        horizLook = filteredInput.x;
+        vertLook = filteredInput.y;
+    }
+
+    private Vector2 ApplyDeadzone(Vector2 input, float threshold)
+    {
+        return input.magnitude < threshold ? Vector2.zero : input;
     }
 
     public void DoFov(float endValue)
     {
-        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
+        mainCamera.DOFieldOfView(endValue, 0.25f);
     }
 
     public void DoTilt(float zTilt)
@@ -72,10 +95,12 @@ public class CameraController : NetworkBehaviour
         transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
     }
 
-    public void OnLook(InputValue context)
+    // Load the sensitivity values from PlayerPrefs
+    private void LoadSensitivitySettings()
     {
-        horizLook = context.Get<Vector2>().x;
-        vertLook = context.Get<Vector2>().y;
+        mouseSensX = PlayerPrefs.GetFloat("Mouse Sensitivity X", 1.0f);
+        mouseSensY = PlayerPrefs.GetFloat("Mouse Sensitivity Y", 1.0f);
+        controllerSensX = PlayerPrefs.GetFloat("Controller Sensitivity X", 1.0f);
+        controllerSensY = PlayerPrefs.GetFloat("Controller Sensitivity Y", 1.0f);
     }
-
 }
