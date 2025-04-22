@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Settings : MonoBehaviour
 {
@@ -9,25 +10,40 @@ public class Settings : MonoBehaviour
     public string sliderName;
     public int defaultValue;
     private float sliderValue;
+    private Toggle toggle;
 
     void Start()
     {
-        // Get the components from the current GameObject and its children
         slider = GetComponent<Slider>();
         value = GetComponentInChildren<TextMeshProUGUI>();
 
         if (slider != null && value != null)
         {
-            // Set the initial text value based on the current slider value
-            UpdateText(slider.value);
+            // Load value from PlayerPrefs or use default
+            sliderValue = PlayerPrefs.GetFloat(sliderName, defaultValue);
 
-            // Add listener to update the text when the slider value changes
+            slider.value = sliderValue;
+
+            // Update display text
+            UpdateText(sliderValue);
+
+            // Add listener
             slider.onValueChanged.AddListener(UpdateText);
         }
 
-        // Load saved value for the slider
-        sliderValue = PlayerPrefs.GetFloat(sliderName, defaultValue);
-        slider.value = sliderValue;
+        if (toggle != null && value != null)
+        {
+            // Load value from PlayerPrefs or use default
+            sliderValue = PlayerPrefs.GetInt(sliderName, defaultValue);
+
+            toggle.isOn = Convert.ToBoolean(sliderValue);
+
+            // Update display text
+            UpdateText(sliderValue);
+
+            // Add listener
+            //toggle.onValueChanged.AddListener(UpdateText);
+        }
     }
 
     // Method to update the text label when the slider changes
@@ -38,8 +54,13 @@ public class Settings : MonoBehaviour
 
         if (sliderName == "Deadzone Right")
         {
-            this.value.text = value.ToString("F1");
+            this.value.text = value.ToString("F2");
         }
+    }
+
+    public void AutoSprintToggle(bool toggle)
+    {
+        PlayerPrefs.SetInt("AutoSprint", toggle ? 1 : 0);
     }
 
     // Method to save the Deadzone Right value when the slider value changes

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections;
 using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
@@ -31,6 +32,10 @@ public class CameraController : NetworkBehaviour
         if (IsOwner)
         {
             Cursor.lockState = CursorLockMode.Locked;
+            mainCamera.fieldOfView = PlayerPrefs.GetFloat("FOV", 80f);
+            rightDeadzone = PlayerPrefs.GetFloat("Deadzone Right", 0.2f);
+            LoadSensitivitySettings();
+            StartCoroutine(DelayedInit());
         }
         else
         {
@@ -39,10 +44,12 @@ public class CameraController : NetworkBehaviour
         }
 
         // Load the initial settings for FOV and sensitivities
-        mainCamera.fieldOfView = PlayerPrefs.GetFloat("FOV", 80f);
+        
 
         // Load initial sensitivity values from PlayerPrefs
-        LoadSensitivitySettings();
+        
+        Debug.Log($"mouseY {mouseSensY}, mouseX {mouseSensX},contY {controllerSensY},contX {controllerSensX}");
+        Debug.Log($"deadzone {rightDeadzone}");
     }
 
     void Update()
@@ -60,8 +67,8 @@ public class CameraController : NetworkBehaviour
         float controllerY = vertLook * Time.deltaTime * controllerSensY;
 
         // Combine both mouse and controller inputs
-        float xRotationInput = (mouseX != 0) ? mouseX : controllerX;
-        float yRotationInput = (mouseY != 0) ? mouseY : controllerY;
+        float xRotationInput = (Gamepad.current == null) ? mouseX : controllerX;
+        float yRotationInput = (Gamepad.current == null) ? mouseY : controllerY;
 
         yRotation += xRotationInput;
         xRotation -= yRotationInput;
@@ -69,6 +76,21 @@ public class CameraController : NetworkBehaviour
 
         camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    private IEnumerator DelayedInit()
+    {
+        yield return null;
+
+        float loadedFov = PlayerPrefs.GetFloat("FOV", 80f);
+
+        // Clamp to a valid range
+        if (loadedFov < 30f || loadedFov > 120f)
+            loadedFov = 80f;
+
+        mainCamera.fieldOfView = loadedFov;
+
+        LoadSensitivitySettings();
     }
 
     public void OnLook(InputValue context)
@@ -82,6 +104,7 @@ public class CameraController : NetworkBehaviour
 
     private Vector2 ApplyDeadzone(Vector2 input, float threshold)
     {
+        Debug.Log($"magnitude{input.magnitude}");
         return input.magnitude < threshold ? Vector2.zero : input;
     }
 
@@ -98,9 +121,9 @@ public class CameraController : NetworkBehaviour
     // Load the sensitivity values from PlayerPrefs
     private void LoadSensitivitySettings()
     {
-        mouseSensX = PlayerPrefs.GetFloat("Mouse Sensitivity X", 1.0f);
-        mouseSensY = PlayerPrefs.GetFloat("Mouse Sensitivity Y", 1.0f);
-        controllerSensX = PlayerPrefs.GetFloat("Controller Sensitivity X", 1.0f);
-        controllerSensY = PlayerPrefs.GetFloat("Controller Sensitivity Y", 1.0f);
+        mouseSensX = PlayerPrefs.GetFloat("Mouse Sensitivity X", 5f);
+        mouseSensY = PlayerPrefs.GetFloat("Mouse Sensitivity Y", 5f);
+        controllerSensX = PlayerPrefs.GetFloat("Controller Sensitivity X", 10f);
+        controllerSensY = PlayerPrefs.GetFloat("Controller Sensitivity Y", 10f);
     }
 }
