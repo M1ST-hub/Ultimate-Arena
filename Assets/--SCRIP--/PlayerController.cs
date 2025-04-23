@@ -540,7 +540,14 @@ public class PlayerController : NetworkBehaviour
 
     public void OnSprint(InputValue context)
     {
-        sprinting = context.isPressed;
+        if (PlayerPrefs.GetInt("AutoSprint", 0) == 1)
+        {
+            sprinting = true;
+        }
+        else
+        {
+            sprinting = context.isPressed;
+        }
     }
 
     public void OnCrouch(InputValue context)

@@ -31,18 +31,13 @@ public class Settings : MonoBehaviour
             slider.onValueChanged.AddListener(UpdateText);
         }
 
-        if (toggle != null && value != null)
+        toggle = GetComponent<Toggle>();
+        if (toggle != null)
         {
             // Load value from PlayerPrefs or use default
             sliderValue = PlayerPrefs.GetInt(sliderName, defaultValue);
 
             toggle.isOn = Convert.ToBoolean(sliderValue);
-
-            // Update display text
-            UpdateText(sliderValue);
-
-            // Add listener
-            //toggle.onValueChanged.AddListener(UpdateText);
         }
     }
 
@@ -56,6 +51,11 @@ public class Settings : MonoBehaviour
         {
             this.value.text = value.ToString("F2");
         }
+    }
+
+    public void JumpController()
+    {
+
     }
 
     public void AutoSprintToggle(bool toggle)
