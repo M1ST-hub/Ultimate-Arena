@@ -458,6 +458,7 @@ public class PlayerController : NetworkBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        anim.SetTrigger("jump");
     }
 
     private void ResetJump()
@@ -531,11 +532,14 @@ public class PlayerController : NetworkBehaviour
     {
         horizontalInput = context.Get<Vector2>().x;
         verticalInput = context.Get<Vector2>().y;
+        anim.SetFloat("HorizInp", horizontalInput, 0.02f, Time.deltaTime);
+        anim.SetFloat("VertInp", verticalInput, 0.02f, Time.deltaTime);
     }
 
     public void OnJump(InputValue context)
     {
         jumping = context.isPressed;
+
     }
 
     public void OnSprint(InputValue context)
@@ -548,16 +552,19 @@ public class PlayerController : NetworkBehaviour
         {
             sprinting = context.isPressed;
         }
+        anim.SetBool("isRunning", sprinting);
     }
 
     public void OnCrouch(InputValue context)
     {
         crouching = context.isPressed;
+        anim.SetBool("isCrouching", crouching);
     }
 
     public void OnTag(InputValue context)
     {
         tagging = context.isPressed;
+        anim.SetTrigger("tag");
     }
 
     public void OnInteract(InputValue context)
@@ -568,6 +575,7 @@ public class PlayerController : NetworkBehaviour
     public void OnSlide(InputValue context)
     {
         sliding = context.isPressed;
+        anim.SetBool("isSliding", sliding);
     }
 
     public void OnScoreboard(InputValue context)
