@@ -1,12 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.Services.CloudSave.Models;
-using Unity.Services.CloudSave.Models.Data.Player;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class ShopUIManager : MonoBehaviour
 {
