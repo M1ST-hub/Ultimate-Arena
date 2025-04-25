@@ -93,10 +93,7 @@ public class ExperienceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
-        {
-            AddExperience(1);
-        }
+        
     }
     
     public void AddExperience(int amount)

@@ -80,7 +80,25 @@ public class Timer : NetworkBehaviour
         
         if (IsServer)
         {
-           Clock.Value = 20;
+
+            if (gameInProgress == true)
+            {
+                Clock.Value = 60;
+//#if UNITY_EDITOR 
+//                Clock.Value = 5;
+//#else
+//Clock.Value = 20;
+//#endif
+            }
+            else
+            {
+                Clock.Value = 30;
+//#if UNITY_EDITOR 
+//                Clock.Value = 15;
+//#else
+//Clock.Value = 20;
+//#endif
+            }
         }
     }
 
