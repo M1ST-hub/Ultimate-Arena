@@ -16,7 +16,7 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadTitle()
     {
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene("TitleScene");       
     }
 
     public void QuitGame()
@@ -25,6 +25,8 @@ public class SceneLoader : MonoBehaviour
         EditorApplication.ExitPlaymode();
 #else
 Application.Quit();
+Player.Instance.SavePlayer();
+PlayerPrefs.Save();
 #endif
     }
 }
