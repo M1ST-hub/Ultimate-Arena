@@ -53,19 +53,85 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += HandleHostDisconnect;
+    }
+
+    //private void OnDestroy()
+    //{
+    //    // Unregister callback when GameManager is destroyed
+    //    NetworkManager.Singleton.OnClientDisconnectCallback -= HandleHostDisconnect;
+    //}
+
+    private void HandleHostDisconnect(ulong clientId)
+    {
+        // If the host disconnects, we need to transfer ownership
+        if (NetworkManager.Singleton.IsHost && clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            Debug.Log("Host disconnected. Transferring host ownership.");
+            TransferHostOwnership();
+        }
+    }
+
+    private void TransferHostOwnership()
+    {
+        // Get the list of connected clients
+        List<NetworkClient> clients = new List<NetworkClient>(NetworkManager.Singleton.ConnectedClientsList);
+
+        // Select a new host (e.g., first available client)
+        NetworkClient newHost = null;
+        foreach (NetworkClient client in clients)
+        {
+            if (client.ClientId != NetworkManager.Singleton.LocalClientId)  // Exclude current host
+            {
+                newHost = client;
+                break;
+            }
+        }
+
+        if (newHost == null)
+        {
+            Debug.LogError("No other clients available to take over the host.");
+            return;
+        }
+
+        // Set new host as the server (give authority to the new host)
+        NetworkManager.Singleton.StartHost();
+        Debug.Log($"New host: Client {newHost.ClientId}");
+
+        // Optionally notify all clients that the host has changed
+        NotifyHostChangeRpc(newHost.ClientId);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void NotifyHostChangeRpc(ulong newHostClientId)
+    {
+        Debug.Log($"Host has changed to Client {newHostClientId}");
+
+        // Additional logic to sync game state or UI on clients, if necessary
     }
 
     void Start()
     {
         Timer.gameStart = false;
         Timer.gameEnd = false;
-        //NetworkManager.Singleton.OnClientConnectedCallback += PlayerJoined;
+        //NetworkManager.Singleton.OnClientDisconnectCallback += TransferHost;
     }
 
     void Update()
     {
 
     }
+
+
+
+    //public void TransferHost(ulong clientId)
+    //{
+    //    if (clientId == IsHost)
+    //    {
+
+    //    }
+    //}
 
     [Rpc(SendTo.Everyone)]
     private void FirstTaggerRpc()

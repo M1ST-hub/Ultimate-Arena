@@ -51,57 +51,68 @@ public class Settings : MonoBehaviour
         {
             this.value.text = value.ToString("F2");
         }
+
+        // Apply settings immediately
+        ApplySettings();
     }
 
-    public void JumpController()
+    public void ApplySettings()
     {
-
+        // Apply settings directly when slider values change
+        if (sliderName == "Deadzone Right")
+        {
+            CameraController.Instance.SetRightDeadzone(slider.value);
+        }
+        else if (sliderName == "FOV")
+        {
+            CameraController.Instance.SetFOV(slider.value);
+        }
+        else if (sliderName == "Mouse Sensitivity X")
+        {
+            CameraController.Instance.SetMouseSensX(slider.value);
+        }
+        else if (sliderName == "Mouse Sensitivity Y")
+        {
+            CameraController.Instance.SetMouseSensY(slider.value);
+        }
+        else if (sliderName == "Controller Sensitivity X")
+        {
+            CameraController.Instance.SetControllerSensX(slider.value);
+        }
+        else if (sliderName == "Controller Sensitivity Y")
+        {
+            CameraController.Instance.SetControllerSensY(slider.value);
+        }
     }
 
-    public void AutoSprintToggle(bool toggle)
-    {
-        PlayerPrefs.SetInt("AutoSprint", toggle ? 1 : 0);
-    }
-
-    // Method to save the Deadzone Right value when the slider value changes
+    // Methods for saving the settings on slider change
     public void OnDeadzoneSliderChanged(float value)
     {
-        // Save the updated Deadzone Right value to PlayerPrefs
         PlayerPrefs.SetFloat("Deadzone Right", value);
     }
 
-    // Method to save the FOV value when the slider value changes
     public void OnFOVSliderChanged(float value)
     {
-        // Save the updated FOV value to PlayerPrefs
         PlayerPrefs.SetFloat("FOV", value);
     }
 
-    // Method to save the Mouse Sensitivity X value when the slider value changes
     public void OnMouseSensitivityXSliderChanged(float value)
     {
-        // Save the updated Mouse Sensitivity X value to PlayerPrefs
         PlayerPrefs.SetFloat("Mouse Sensitivity X", value);
     }
 
-    // Method to save the Mouse Sensitivity Y value when the slider value changes
     public void OnMouseSensitivityYSliderChanged(float value)
     {
-        // Save the updated Mouse Sensitivity Y value to PlayerPrefs
         PlayerPrefs.SetFloat("Mouse Sensitivity Y", value);
     }
 
-    // Method to save the Controller Sensitivity X value when the slider value changes
     public void OnControllerSensitivityXSliderChanged(float value)
     {
-        // Save the updated Controller Sensitivity X value to PlayerPrefs
         PlayerPrefs.SetFloat("Controller Sensitivity X", value);
     }
 
-    // Method to save the Controller Sensitivity Y value when the slider value changes
     public void OnControllerSensitivityYSliderChanged(float value)
     {
-        // Save the updated Controller Sensitivity Y value to PlayerPrefs
         PlayerPrefs.SetFloat("Controller Sensitivity Y", value);
     }
 }

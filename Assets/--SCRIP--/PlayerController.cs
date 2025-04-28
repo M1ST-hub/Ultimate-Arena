@@ -207,6 +207,7 @@ public class PlayerController : NetworkBehaviour
                 int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
                 currentXp.Value += xpGain;
             }
+            Debug.DrawRay(orientation.position, orientation.forward * 3, Color.red);
         }
 
 
@@ -402,6 +403,7 @@ public class PlayerController : NetworkBehaviour
     {
         //calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
 
         //on slope
         if (OnSlope() && !exitingSlope)

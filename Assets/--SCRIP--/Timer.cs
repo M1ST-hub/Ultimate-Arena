@@ -41,7 +41,7 @@ public class Timer : NetworkBehaviour
 
         //countdown timer
         if (Clock.Value > 0 && IsServer)
-            Clock.Value -= Time.deltaTime;
+            Clock.Value -= Time.fixedDeltaTime;
         //stop timer at 0
         else if (Clock.Value < 1 && IsServer)
         {

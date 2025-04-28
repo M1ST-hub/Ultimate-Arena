@@ -475,9 +475,7 @@ MonoBehaviour:
   controllerSensX: 0
   controllerSensY: 0
   orientation: {fileID: 3459060028832005621}
-  camHolder: {fileID: 8837324269609005105}
-  vertLook: 0
-  horizLook: 0
+  camHolder: {fileID: 7748304966401730499}
 --- !u!1 &1158371677606762515
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,7 +1158,7 @@ MonoBehaviour:
     m_Bits: 64
   grounded: 0
   maxSlopeAngle: 40
-  orientation: {fileID: 3459060028832005621}
+  orientation: {fileID: 8837324269609005105}
   horizontalInput: 0
   verticalInput: 0
   playerInput: {fileID: 0}
@@ -1263,7 +1261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 697b0229ff0b9ec47a05414b3f47ebef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 3459060028832005621}
+  orientation: {fileID: 8837324269609005105}
   playerObj: {fileID: 1628868754314394314}
   maxSlideTime: 0.75
   slideForce: 200
@@ -1302,7 +1300,7 @@ MonoBehaviour:
   exitWallTime: 0.2
   useGravity: 1
   gravityCounterForce: 20
-  orientation: {fileID: 7748304966401730499}
+  orientation: {fileID: 8837324269609005105}
   cam: {fileID: 3519017322005078289}
 --- !u!114 &8928152607645913093
 MonoBehaviour:
@@ -1316,7 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1f0b8bdf06b7a41985adf6b3f1125c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 3459060028832005621}
+  orientation: {fileID: 8837324269609005105}
   rb: {fileID: 4238205381629159899}
   pm: {fileID: 4033781016593099677}
   whatIsWall:

@@ -1,12 +1,12 @@
 using DG.Tweening;
-using System.Collections;
-using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraController : NetworkBehaviour
 {
+    public static CameraController Instance { get; private set; }
+
     public float mouseSensX;
     public float mouseSensY;
     public float controllerSensX;
@@ -15,15 +15,18 @@ public class CameraController : NetworkBehaviour
     public Transform orientation;
     public Transform camHolder;
 
-    float xRotation;
-    float yRotation;
-
-    public float vertLook;
-    public float horizLook;
-
     private Camera mainCamera;
 
     private float rightDeadzone = 0.2f;
+
+    private float xRotation;
+    private float yRotation;
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
 
     void Start()
     {
@@ -34,96 +37,96 @@ public class CameraController : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             mainCamera.fieldOfView = PlayerPrefs.GetFloat("FOV", 80f);
             rightDeadzone = PlayerPrefs.GetFloat("Deadzone Right", 0.2f);
-            LoadSensitivitySettings();
-            StartCoroutine(DelayedInit());
+
+            // Apply saved settings for sensitivities and deadzone
+            ApplySavedSettings();
         }
         else
         {
             mainCamera.enabled = false;
             GetComponent<AudioListener>().enabled = false;
         }
-
-        // Load the initial settings for FOV and sensitivities
-        
-
-        // Load initial sensitivity values from PlayerPrefs
-        
-        Debug.Log($"mouseY {mouseSensY}, mouseX {mouseSensX},contY {controllerSensY},contX {controllerSensX}");
-        Debug.Log($"deadzone {rightDeadzone}");
     }
 
     void Update()
     {
-        // Re-load the sensitivity values from PlayerPrefs in case they were changed during gameplay (from the UI)
-        LoadSensitivitySettings();
-
         if (!IsOwner) return;
 
         // Handle mouse and controller inputs for camera rotation
-        float mouseX = horizLook * Time.deltaTime * mouseSensX;
-        float mouseY = vertLook * Time.deltaTime * mouseSensY;
+        float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensX * Time.deltaTime;
+        float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensY * Time.deltaTime;
 
-        float controllerX = horizLook * Time.deltaTime * controllerSensX;
-        float controllerY = vertLook * Time.deltaTime * controllerSensY;
+        float controllerX = Gamepad.current.rightStick.x.ReadValue() * controllerSensX * Time.deltaTime;
+        float controllerY = Gamepad.current.rightStick.y.ReadValue() * controllerSensY * Time.deltaTime;
 
-        // Combine both mouse and controller inputs
+        // Combine both mouse and controller inputs for camera rotation
         float xRotationInput = (Gamepad.current == null) ? mouseX : controllerX;
         float yRotationInput = (Gamepad.current == null) ? mouseY : controllerY;
 
-        yRotation += xRotationInput;
+        // Apply rotation limits
         xRotation -= yRotationInput;
+        yRotation += xRotationInput;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        camHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+        camHolder.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
     }
 
-    private IEnumerator DelayedInit()
+    // Update methods to set values dynamically
+    public void SetRightDeadzone(float value)
     {
-        yield return null;
-
-        float loadedFov = PlayerPrefs.GetFloat("FOV", 80f);
-
-        // Clamp to a valid range
-        if (loadedFov < 30f || loadedFov > 120f)
-            loadedFov = 80f;
-
-        mainCamera.fieldOfView = loadedFov;
-
-        LoadSensitivitySettings();
+        rightDeadzone = value;
     }
 
-    public void OnLook(InputValue context)
+    public void SetFOV(float value)
     {
-        Vector2 rawInput = context.Get<Vector2>();
-        Vector2 filteredInput = ApplyDeadzone(rawInput, rightDeadzone);
-
-        horizLook = filteredInput.x;
-        vertLook = filteredInput.y;
+        mainCamera.fieldOfView = value;
     }
 
-    private Vector2 ApplyDeadzone(Vector2 input, float threshold)
+    public void SetMouseSensX(float value)
     {
-        Debug.Log($"magnitude{input.magnitude}");
-        return input.magnitude < threshold ? Vector2.zero : input;
+        mouseSensX = value;
     }
 
-    public void DoFov(float endValue)
+    public void SetMouseSensY(float value)
     {
-        mainCamera.DOFieldOfView(endValue, 0.25f);
+        mouseSensY = value;
     }
 
-    public void DoTilt(float zTilt)
+    public void SetControllerSensX(float value)
     {
-        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
+        controllerSensX = value;
     }
 
-    // Load the sensitivity values from PlayerPrefs
-    private void LoadSensitivitySettings()
+    public void SetControllerSensY(float value)
+    {
+        controllerSensY = value;
+    }
+
+    // Apply the saved settings from PlayerPrefs
+    private void ApplySavedSettings()
     {
         mouseSensX = PlayerPrefs.GetFloat("Mouse Sensitivity X", 5f);
         mouseSensY = PlayerPrefs.GetFloat("Mouse Sensitivity Y", 5f);
         controllerSensX = PlayerPrefs.GetFloat("Controller Sensitivity X", 10f);
         controllerSensY = PlayerPrefs.GetFloat("Controller Sensitivity Y", 10f);
+        rightDeadzone = PlayerPrefs.GetFloat("Deadzone Right", 0.2f);
+    }
+
+    // Method to apply deadzone for controller
+    private Vector2 ApplyDeadzone(Vector2 input, float threshold)
+    {
+        return input.magnitude < threshold ? Vector2.zero : input;
+    }
+
+    // Method to apply Field of View (FOV) transition
+    public void DoFov(float endValue)
+    {
+        mainCamera.DOFieldOfView(endValue, 0.25f);
+    }
+
+    // Method to apply camera tilt transition
+    public void DoTilt(float zTilt)
+    {
+        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
     }
 }
