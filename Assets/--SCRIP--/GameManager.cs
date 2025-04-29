@@ -295,10 +295,10 @@ public class GameManager : NetworkBehaviour
         {
             foreach (PlayerController playerController in sortedPlayers)
             {
-                if (playerController.untaggedTime >= surviveTime)
+                if (playerController.netUntaggedTime.Value >= surviveTime)
                 {
                     longestSurvivor = playerController.DisplayName;
-                    surviveTime = playerController.untaggedTime;
+                    surviveTime = playerController.netUntaggedTime.Value;
                 }
             }
 
@@ -309,10 +309,10 @@ public class GameManager : NetworkBehaviour
         {
             foreach (PlayerController playerController in sortedPlayers)
             {
-                if (playerController.taggedTime >= mostTagTime)
+                if (playerController.netTaggedTime.Value >= mostTagTime)
                 {
                     taggedTime = playerController.DisplayName;
-                    mostTagTime = playerController.taggedTime;
+                    mostTagTime = playerController.netTaggedTime.Value;
                 }
             }
 
@@ -347,6 +347,7 @@ public class GameManager : NetworkBehaviour
         surviveTime = 0;
         taggedTime = "";
         mostTagTime = 0;
+        playerController.mostTags = 0;
 
         Debug.Log("Game Restarted");
     }

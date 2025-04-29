@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class CameraController : NetworkBehaviour
 {
-    public static CameraController Instance { get; private set; }
+    public CameraController Instance { get; private set; }
 
     public float mouseSensX;
     public float mouseSensY;
@@ -21,12 +21,6 @@ public class CameraController : NetworkBehaviour
 
     private float xRotation;
     private float yRotation;
-
-    void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     void Start()
     {
@@ -68,7 +62,8 @@ public class CameraController : NetworkBehaviour
         yRotation += xRotationInput;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        camHolder.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
+        camHolder.localRotation = Quaternion.Euler(xRotation, 0, 0);
+        transform.root.localRotation = Quaternion.Euler(0, yRotation, 0);
     }
 
     // Update methods to set values dynamically

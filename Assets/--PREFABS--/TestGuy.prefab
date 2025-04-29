@@ -474,7 +474,7 @@ MonoBehaviour:
   mouseSensY: 0
   controllerSensX: 0
   controllerSensY: 0
-  orientation: {fileID: 3459060028832005621}
+  orientation: {fileID: 8837324269609005105}
   camHolder: {fileID: 7748304966401730499}
 --- !u!1 &1158371677606762515
 GameObject:
@@ -860,6 +860,37 @@ Transform:
   - {fileID: 7263760249272927515}
   m_Father: {fileID: 3647739610955090545}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4067393713930951054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3119739204407018589}
+  m_Layer: 8
+  m_Name: Orientation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3119739204407018589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4067393713930951054}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.907, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3459060028832005621}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4075393884234515476
 GameObject:
   m_ObjectHideFlags: 0
@@ -960,11 +991,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4272469537526966095}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -8.171873, y: 0.00023782253, z: -5.176161}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3119739204407018589}
   - {fileID: 9213860648422537573}
   - {fileID: 8958044523486174561}
   - {fileID: 1628868754314394314}
@@ -1158,7 +1190,7 @@ MonoBehaviour:
     m_Bits: 64
   grounded: 0
   maxSlopeAngle: 40
-  orientation: {fileID: 8837324269609005105}
+  orientation: {fileID: 3119739204407018589}
   horizontalInput: 0
   verticalInput: 0
   playerInput: {fileID: 0}
@@ -1261,7 +1293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 697b0229ff0b9ec47a05414b3f47ebef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 8837324269609005105}
+  orientation: {fileID: 3119739204407018589}
   playerObj: {fileID: 1628868754314394314}
   maxSlideTime: 0.75
   slideForce: 200
@@ -1300,7 +1332,7 @@ MonoBehaviour:
   exitWallTime: 0.2
   useGravity: 1
   gravityCounterForce: 20
-  orientation: {fileID: 8837324269609005105}
+  orientation: {fileID: 3459060028832005621}
   cam: {fileID: 3519017322005078289}
 --- !u!114 &8928152607645913093
 MonoBehaviour:
@@ -1314,7 +1346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1f0b8bdf06b7a41985adf6b3f1125c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 8837324269609005105}
+  orientation: {fileID: 3119739204407018589}
   rb: {fileID: 4238205381629159899}
   pm: {fileID: 4033781016593099677}
   whatIsWall:

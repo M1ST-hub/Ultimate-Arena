@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Unity.Netcode;
 
 public class Settings : MonoBehaviour
 {
@@ -11,11 +12,21 @@ public class Settings : MonoBehaviour
     public int defaultValue;
     private float sliderValue;
     private Toggle toggle;
+    public CameraController camController;
 
     void Start()
     {
         slider = GetComponent<Slider>();
         value = GetComponentInChildren<TextMeshProUGUI>();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<NetworkObject>().IsLocalPlayer)
+            {
+                camController = player.GetComponentInChildren<CameraController>();
+            }
+        }
 
         if (slider != null && value != null)
         {
@@ -61,27 +72,27 @@ public class Settings : MonoBehaviour
         // Apply settings directly when slider values change
         if (sliderName == "Deadzone Right")
         {
-            CameraController.Instance.SetRightDeadzone(slider.value);
+            camController.SetRightDeadzone(slider.value);
         }
         else if (sliderName == "FOV")
         {
-            CameraController.Instance.SetFOV(slider.value);
+            camController.SetFOV(slider.value);
         }
         else if (sliderName == "Mouse Sensitivity X")
         {
-            CameraController.Instance.SetMouseSensX(slider.value);
+            camController.SetMouseSensX(slider.value);
         }
         else if (sliderName == "Mouse Sensitivity Y")
         {
-            CameraController.Instance.SetMouseSensY(slider.value);
+            camController.SetMouseSensY(slider.value);
         }
         else if (sliderName == "Controller Sensitivity X")
         {
-            CameraController.Instance.SetControllerSensX(slider.value);
+            camController.SetControllerSensX(slider.value);
         }
         else if (sliderName == "Controller Sensitivity Y")
         {
-            CameraController.Instance.SetControllerSensY(slider.value);
+            camController.SetControllerSensY(slider.value);
         }
     }
 

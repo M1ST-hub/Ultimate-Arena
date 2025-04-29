@@ -36,7 +36,7 @@ public class Sliding : MonoBehaviour
         horizontalInput = pm.horizontalInput;
         verticalInput = pm.verticalInput;
 
-        if (pm.sliding && (horizontalInput != 0 || verticalInput != 0) && isSliding == false)
+        if (pm.sliding && (horizontalInput != 0 || verticalInput != 0) && isSliding == false && pm.grounded)
             StartSlide();
 
         if (pm.sliding == false && isSliding)
