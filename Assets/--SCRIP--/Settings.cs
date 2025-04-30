@@ -13,12 +13,14 @@ public class Settings : MonoBehaviour
     private float sliderValue;
     private Toggle toggle;
     public CameraController camController;
+    public AudioManager am;
 
     void Start()
     {
         slider = GetComponent<Slider>();
         value = GetComponentInChildren<TextMeshProUGUI>();
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        am = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
         foreach (GameObject player in players)
         {
@@ -58,7 +60,15 @@ public class Settings : MonoBehaviour
         // Update the displayText string based on the slider value
         this.value.text = value.ToString("F0");
 
-        if (sliderName == "Deadzone Right")
+        if (sliderName  == "MasterVolume")
+        {
+            AudioManager.Instance.ChangeSoundVolume(value);
+        }
+        else if (sliderName == "MusicVolume")
+        {
+            AudioManager.Instance.ChangeMusicVolume(value);
+        }
+        else if (sliderName == "Deadzone Right")
         {
             this.value.text = value.ToString("F2");
         }
@@ -69,31 +79,43 @@ public class Settings : MonoBehaviour
 
     public void ApplySettings()
     {
-        // Apply settings directly when slider values change
-        if (sliderName == "Deadzone Right")
+        if (camController != null)
         {
-            camController.SetRightDeadzone(slider.value);
+            // Apply settings directly when slider values change
+            if (sliderName == "Deadzone Right")
+            {
+                camController.SetRightDeadzone(slider.value);
+            }
+            else if (sliderName == "FOV")
+            {
+                camController.SetFOV(slider.value);
+            }
+            else if (sliderName == "Mouse Sensitivity X")
+            {
+                camController.SetMouseSensX(slider.value);
+            }
+            else if (sliderName == "Mouse Sensitivity Y")
+            {
+                camController.SetMouseSensY(slider.value);
+            }
+            else if (sliderName == "Controller Sensitivity X")
+            {
+                camController.SetControllerSensX(slider.value);
+            }
+            else if (sliderName == "Controller Sensitivity Y")
+            {
+                camController.SetControllerSensY(slider.value);
+            }
         }
-        else if (sliderName == "FOV")
-        {
-            camController.SetFOV(slider.value);
-        }
-        else if (sliderName == "Mouse Sensitivity X")
-        {
-            camController.SetMouseSensX(slider.value);
-        }
-        else if (sliderName == "Mouse Sensitivity Y")
-        {
-            camController.SetMouseSensY(slider.value);
-        }
-        else if (sliderName == "Controller Sensitivity X")
-        {
-            camController.SetControllerSensX(slider.value);
-        }
-        else if (sliderName == "Controller Sensitivity Y")
-        {
-            camController.SetControllerSensY(slider.value);
-        }
+        else
+            return;
+    }
+
+    public void ChangeTrack()
+    {
+        am.audioSource.Stop();
+        am.audioSource.clip = am.trackList[UnityEngine.Random.Range(0, am.trackList.Length)];
+        am.audioSource.Play();
     }
 
     // Methods for saving the settings on slider change
