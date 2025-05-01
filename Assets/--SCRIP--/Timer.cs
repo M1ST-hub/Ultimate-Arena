@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.Netcode;
-using static UnityEngine.CullingGroup;
-using JetBrains.Annotations;
-using System.Threading;
+
 
 public class Timer : NetworkBehaviour
 {
@@ -83,21 +79,21 @@ public class Timer : NetworkBehaviour
 
             if (gameInProgress == true)
             {
-                Clock.Value = 60;
-//#if UNITY_EDITOR 
-//                Clock.Value = 5;
-//#else
-//Clock.Value = 20;
-//#endif
+                Clock.Value = 180;
+#if UNITY_EDITOR 
+                Clock.Value = 5;
+#else
+Clock.Value = 20;
+#endif
             }
             else
             {
                 Clock.Value = 30;
-//#if UNITY_EDITOR 
-//                Clock.Value = 15;
-//#else
-//Clock.Value = 20;
-//#endif
+#if UNITY_EDITOR 
+                Clock.Value = 15;
+#else
+Clock.Value = 20;
+#endif
             }
         }
     }

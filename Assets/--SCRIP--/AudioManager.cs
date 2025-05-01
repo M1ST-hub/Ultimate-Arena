@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class AudioManager : MonoBehaviour
     [Header("References")]
     public AudioMixer masterMixer;
     public AudioSource audioSource;
+    public AudioSource musicSource;
 
     [Header("Track List")]
     public AudioClip[] trackList;
@@ -35,19 +35,19 @@ public class AudioManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         masterMixer.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVolume", 1));
         masterMixer.SetFloat("MusicVol", PlayerPrefs.GetFloat("MusicVolume", 1));
-        audioSource.clip = trackList[0];
-        audioSource.Play();
+        musicSource.clip = trackList[0];
+        musicSource.Play();
     }
 
     private void Update()
     {
-        if (audioSource != null)
+        if (musicSource != null)
         {
-            if (audioSource.clip.length == 0)
+            if (musicSource.clip.length == 0)
             {
-                audioSource.Stop();
-                audioSource.clip = trackList[UnityEngine.Random.Range(0, trackList.Length)];
-                audioSource.Play();
+                musicSource.Stop();
+                musicSource.clip = trackList[UnityEngine.Random.Range(0, trackList.Length)];
+                musicSource.Play();
             }
 
         }

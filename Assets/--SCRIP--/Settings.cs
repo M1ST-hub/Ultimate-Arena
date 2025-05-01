@@ -113,9 +113,9 @@ public class Settings : MonoBehaviour
 
     public void ChangeTrack()
     {
-        am.audioSource.Stop();
-        am.audioSource.clip = am.trackList[UnityEngine.Random.Range(0, am.trackList.Length)];
-        am.audioSource.Play();
+        am.musicSource.Stop();
+        am.musicSource.clip = am.trackList[UnityEngine.Random.Range(0, am.trackList.Length)];
+        am.musicSource.Play();
     }
 
     // Methods for saving the settings on slider change
