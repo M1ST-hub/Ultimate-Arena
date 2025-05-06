@@ -189,24 +189,29 @@ public class PlayerController : NetworkBehaviour
                 playerInput.SwitchCurrentActionMap("Player");
             }
 
-            if (isTagger)
+            if (GameManager.Instance.isGameStarted)
             {
-                taggedTime += Time.deltaTime;
-                netTaggedTime.Value = taggedTime;
+                if (isTagger)
+                {
+                    taggedTime += Time.deltaTime;
+                    netTaggedTime.Value = taggedTime;
 
-                int xpGain = Mathf.RoundToInt((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
-                currentXp.Value += xpGain;
+                    int xpGain = Mathf.RoundToInt((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
+                    currentXp.Value += xpGain;
+                }
+                else
+                {
+                    untaggedMult += Time.deltaTime;
+                    untaggedTime += Time.deltaTime;
+                    netUntaggedTime.Value = untaggedTime;
+
+                    multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
+                    int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
+                    currentXp.Value += xpGain;
+                }
             }
             else
-            {
-                untaggedMult += Time.deltaTime;
-                untaggedTime += Time.deltaTime;
-                netUntaggedTime.Value = untaggedTime;
-
-                multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
-                int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
-                currentXp.Value += xpGain;
-            }
+                return;
             Debug.DrawRay(orientation.position, orientation.forward * 3, Color.red);
         }
 

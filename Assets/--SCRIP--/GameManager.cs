@@ -338,7 +338,17 @@ public class GameManager : NetworkBehaviour
         surviveTime = 0;
         taggedTime = "";
         mostTagTime = 0;
-        playerController.mostTags = 0;
+        foreach (var player in players)
+        {
+            var pc = player.GetComponent<PlayerController>();
+            if (pc != null)
+            {
+                pc.mostTags = 0;
+                pc.netTaggedTime.Value = 0f;
+                pc.netUntaggedTime.Value = 0f;
+            }
+        }
+
 
         Debug.Log("Game Restarted");
     }
