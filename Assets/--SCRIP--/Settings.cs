@@ -24,11 +24,26 @@ public class Settings : MonoBehaviour
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<NetworkObject>().IsLocalPlayer)
+            if (player == null)
+            {
+                Debug.LogWarning("Null player object found.");
+                continue;
+            }
+
+            NetworkObject netObj = player.GetComponent<NetworkObject>();
+            if (netObj == null)
+            {
+                Debug.LogWarning($"Player '{player.name}' is missing a NetworkObject component.");
+                continue;
+            }
+
+            if (netObj.IsLocalPlayer)
             {
                 camController = player.GetComponentInChildren<CameraController>();
+                break;
             }
         }
+
 
         if (slider != null && value != null)
         {

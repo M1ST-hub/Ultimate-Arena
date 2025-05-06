@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
 public class GameManager : NetworkBehaviour
@@ -38,6 +39,12 @@ public class GameManager : NetworkBehaviour
     public int gainedExperience;
     public int surviveExperience;
 
+    public TextMeshProUGUI podiumCategoryLabel;
+    private string[] podiumCategories = { "Most Tags", "Longest Survivor", "Most Time Tagged" };
+    private int currentPodiumIndex = 0;
+    private string currentPodiumCategory => podiumCategories[currentPodiumIndex];
+
+
     private PlayerController playerController;
     public static GameManager Instance { get; private set; }
 
@@ -53,15 +60,72 @@ public class GameManager : NetworkBehaviour
         {
             Instance = this;
         }
-
-        NetworkManager.Singleton.OnClientDisconnectCallback += HandleHostDisconnect;
     }
 
-    //private void OnDestroy()
-    //{
-    //    // Unregister callback when GameManager is destroyed
-    //    NetworkManager.Singleton.OnClientDisconnectCallback -= HandleHostDisconnect;
-    //}
+    public void CyclePodiumCategory()
+    {
+        currentPodiumIndex = (currentPodiumIndex + 1) % podiumCategories.Length;
+        Debug.Log($"Switched podium category to: {currentPodiumCategory}");
+
+        if (podiumCategoryLabel != null)
+            podiumCategoryLabel.text = $"Showing: {currentPodiumCategory}";
+
+        PlayerStats();
+    }
+
+    public void PlayerStats()
+    {
+        List<PlayerController> playerControllers = new List<PlayerController>();
+
+        foreach (GameObject player in players)
+        {
+            PlayerController pc = player.GetComponent<PlayerController>();
+            if (pc != null) playerControllers.Add(pc);
+        }
+
+        if (playerControllers.Count == 0)
+        {
+            Debug.LogError("No valid PlayerControllers found.");
+            return;
+        }
+
+        switch (currentPodiumCategory)
+        {
+            case "Most Tags":
+                playerControllers.Sort((a, b) => b.mostTags.CompareTo(a.mostTags));
+                break;
+            case "Longest Survivor":
+                playerControllers.Sort((a, b) => b.netUntaggedTime.Value.CompareTo(a.netUntaggedTime.Value));
+                break;
+            case "Most Time Tagged":
+                playerControllers.Sort((a, b) => b.netTaggedTime.Value.CompareTo(a.netTaggedTime.Value));
+                break;
+        }
+
+        // Fill the podium UI
+        pod1.text = playerControllers.Count > 0 ? $"{playerControllers[0].DisplayName} - {StatText(playerControllers[0])}" : "";
+        pod2.text = playerControllers.Count > 1 ? $"{playerControllers[1].DisplayName} - {StatText(playerControllers[1])}" : "";
+        pod3.text = playerControllers.Count > 2 ? $"{playerControllers[2].DisplayName} - {StatText(playerControllers[2])}" : "";
+    }
+
+    private string StatText(PlayerController pc)
+    {
+        switch (currentPodiumCategory)
+        {
+            case "Most Tags": return $"Tags: {pc.mostTags}";
+            case "Longest Survivor": return $"Time Untagged: {pc.netUntaggedTime.Value:F1}s";
+            case "Most Time Tagged": return $"Time Tagged: {pc.netTaggedTime.Value:F1}s";
+            default: return "";
+        }
+    }
+
+
+
+    /*public override void OnDestroy()
+    {
+       // Unregister callback when GameManager is destroyed
+       NetworkManager.Singleton.OnClientDisconnectCallback -= HandleHostDisconnect;
+    }*/
 
     private void HandleHostDisconnect(ulong clientId)
     {
@@ -113,6 +177,15 @@ public class GameManager : NetworkBehaviour
 
     void Start()
     {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += HandleHostDisconnect;
+        }
+        else
+        {
+            Debug.LogError("NetworkManager.Singleton is null in GameManager.Awake()");
+        }
+
         Timer.gameStart = false;
         Timer.gameEnd = false;
         //NetworkManager.Singleton.OnClientDisconnectCallback += TransferHost;
@@ -237,88 +310,6 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-
-    public void PlayerStats()
-    {
-        List<PlayerController> playerControllers = new List<PlayerController>();
-
-        // Gather stats for all players
-        foreach (GameObject player in players)
-        {
-            PlayerController pc = player.GetComponent<PlayerController>();
-            if (pc == null) continue;
-            
-            playerControllers.Add(pc);
-            
-            float tagged = pc.netTaggedTime.Value;
-            float untagged = pc.netUntaggedTime.Value;
-
-            Debug.Log($"{pc.DisplayName} — Tagged: {tagged:F1}s, Untagged: {untagged:F1}s");
-        }
-
-        if (playerControllers.Count == 0)
-        {
-            Debug.LogError("No valid PlayerControllers found.");
-            return;
-        }
-
-        // Now sort and display
-        playerControllers.Sort((a, b) => b.mostTags.CompareTo(a.mostTags));
-        DisplaySortedPlayers("Most Tags", playerControllers);
-
-        playerControllers.Sort((a, b) => b.taggedTime.CompareTo(a.taggedTime));
-        DisplaySortedPlayers("Tagged Time", playerControllers);
-
-        playerControllers.Sort((a, b) => b.untaggedTime.CompareTo(a.untaggedTime));
-        DisplaySortedPlayers("Untagged Time", playerControllers);
-    }
-
-    private void DisplaySortedPlayers(string criteria, List<PlayerController> sortedPlayers)
-    {
-        Debug.Log($"Sorted by {criteria}:");
-
-        if (criteria == "Most Tags")
-        {
-            foreach (PlayerController playerController in sortedPlayers)
-            {
-                if (playerController.mostTags >= mostTags)
-                {
-                    mostTaggedPlayer = playerController.DisplayName; // use a proper display name
-                    mostTags = playerController.mostTags;
-                }
-            }
-
-            pod2.text = $"{mostTaggedPlayer} - Tags: {mostTags}";
-        }
-
-        if (criteria == "Most Untagged Time")
-        {
-            foreach (PlayerController playerController in sortedPlayers)
-            {
-                if (playerController.netUntaggedTime.Value >= surviveTime)
-                {
-                    longestSurvivor = playerController.DisplayName;
-                    surviveTime = playerController.netUntaggedTime.Value;
-                }
-            }
-
-            pod1.text = $"{longestSurvivor} - Time Untagged: {surviveTime:F2}s";
-        }
-
-        if (criteria == "Most Tagged Time")
-        {
-            foreach (PlayerController playerController in sortedPlayers)
-            {
-                if (playerController.netTaggedTime.Value >= mostTagTime)
-                {
-                    taggedTime = playerController.DisplayName;
-                    mostTagTime = playerController.netTaggedTime.Value;
-                }
-            }
-
-            pod3.text = $"{taggedTime} - Time Tagged: {mostTagTime:F2}s";
-        }
-    }
 
     [Rpc(SendTo.Everyone)]
     public void GameRestartRpc()

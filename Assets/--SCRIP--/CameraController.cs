@@ -50,8 +50,9 @@ public class CameraController : NetworkBehaviour
         float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensX * Time.deltaTime;
         float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensY * Time.deltaTime;
 
-        float controllerX = Gamepad.current.rightStick.x.ReadValue() * controllerSensX * Time.deltaTime;
-        float controllerY = Gamepad.current.rightStick.y.ReadValue() * controllerSensY * Time.deltaTime;
+        float controllerX = (Gamepad.current == null) ? 0 : Gamepad.current.rightStick.x.ReadValue() * controllerSensX * Time.deltaTime;
+        float controllerY = (Gamepad.current == null) ? 0 : Gamepad.current.rightStick.y.ReadValue() * controllerSensY * Time.deltaTime;
+
 
         // Combine both mouse and controller inputs for camera rotation
         float xRotationInput = (Gamepad.current == null) ? mouseX : controllerX;

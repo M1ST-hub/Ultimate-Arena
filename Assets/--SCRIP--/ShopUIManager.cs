@@ -34,7 +34,6 @@ public class ShopUIManager : MonoBehaviour
 
         // Toggle the shop panel visibility
         shopPanel.SetActive(!isActive);
-        Debug.Log("happ");
 
         // When re-enabling, restore the scrollbar value
         if (!isActive)
@@ -50,7 +49,6 @@ public class ShopUIManager : MonoBehaviour
 
         // Toggle the shop panel visibility
         inventoryPanel.SetActive(!isActive);
-        Debug.Log("happ");
 
         // When re-enabling, restore the scrollbar value
         if (!isActive)

@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
 
     public void SavePlayer()
     {
-        Debug.Log("Saving tokens: " + tokens);
         PlayerSaveManager.SavePlayer(this);
     }
 
@@ -56,10 +55,8 @@ public class Player : MonoBehaviour
                 level = 1;
             else
                 level = data.level;
-            Debug.Log("Loaded tokens: " + data.tokens);
             tokens = data.tokens;
 
-            Debug.Log("Player tokens after loading: " + tokens);
 
             xp = data.xp;
         }

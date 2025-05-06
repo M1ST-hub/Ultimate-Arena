@@ -3385,7 +3385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   masterMixer: {fileID: 24100000, guid: 3f752dfab0324b44aa2a5d58ccfcc07d, type: 2}
   audioSource: {fileID: 545743675}
-  musicSource: {fileID: 0}
+  musicSource: {fileID: 1903445370}
   trackList:
   - {fileID: 8300000, guid: 9fe9f36c94f2fb3489e237de8f8f969b, type: 3}
   - {fileID: 8300000, guid: 85dc8f0d907dbb54fb3c976c666be1b1, type: 3}
