@@ -283,6 +283,8 @@ public class GameManager : NetworkBehaviour
             player.transform.position = endPoints[Random.Range(0, endPoints.Length)].transform.position;
         }
 
+        isGameStarted = false;
+
         if (IsServer)
             SpawnPostGameTimerRpc();
 

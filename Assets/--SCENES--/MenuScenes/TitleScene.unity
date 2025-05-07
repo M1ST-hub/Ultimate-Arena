@@ -3758,7 +3758,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 6.475403, y: -132}
+  m_AnchoredPosition: {x: 6.475342, y: -132}
   m_SizeDelta: {x: 173.3438, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &829210044
@@ -4207,15 +4207,15 @@ RectTransform:
   m_GameObject: {fileID: 1039731732}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.08447867, y: 0.0277126, z: 0.5}
+  m_LocalScale: {x: 0.15207005, y: 0.043508783, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 96541550}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -26.273865, y: -7.3161926}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -1.7665768, y: -7}
+  m_SizeDelta: {x: 429.93298, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &1039731734
 Animator:
@@ -4259,7 +4259,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press Any Button To Start
+  m_text: Press To Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
