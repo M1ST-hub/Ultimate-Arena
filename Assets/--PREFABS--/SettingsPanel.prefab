@@ -1484,6 +1484,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: Deadzone Right
   defaultValue: 1
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &1318053286410252297
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,6 +3446,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: Mouse Sensitivity X
   defaultValue: 60
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &2762723178775907335
 GameObject:
   m_ObjectHideFlags: 0
@@ -4670,6 +4674,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: Controller Sensitivity X
   defaultValue: 200
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &3274819277345871237
 GameObject:
   m_ObjectHideFlags: 0
@@ -5589,6 +5595,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: Mouse Sensitivity Y
   defaultValue: 60
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &3961221205388172637
 GameObject:
   m_ObjectHideFlags: 0
@@ -7051,6 +7059,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: FOV
   defaultValue: 80
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &5933294548227225660
 GameObject:
   m_ObjectHideFlags: 0
@@ -8335,6 +8345,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: FOV
   defaultValue: 0
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &6465806569791877022
 GameObject:
   m_ObjectHideFlags: 0
@@ -8857,8 +8869,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2779698319218337755}
         m_TargetAssemblyTypeName: Settings, Assembly-CSharp
-        m_MethodName: AutoSprintToggle
-        m_Mode: 0
+        m_MethodName: ApplySettings
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8882,6 +8894,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: AutoSprint
   defaultValue: 0
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &6541164302067529344
 GameObject:
   m_ObjectHideFlags: 0
@@ -11058,6 +11072,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderName: Controller Sensitivity Y
   defaultValue: 200
+  camController: {fileID: 0}
+  am: {fileID: 0}
 --- !u!1 &8560811922770229080
 GameObject:
   m_ObjectHideFlags: 0
@@ -11785,7 +11801,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 690190895482579582, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_Text
-      value: Press Space
+      value: Press RMB
       objectReference: {fileID: 0}
     - target: {fileID: 6680292650503350822, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_Name
@@ -12594,7 +12610,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 690190895482579582, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_Text
-      value: Press A
+      value: Press LB
       objectReference: {fileID: 0}
     - target: {fileID: 6680292650503350822, guid: f25dcd618d3acd64795bf8bb32edb6c9, type: 3}
       propertyPath: m_Name

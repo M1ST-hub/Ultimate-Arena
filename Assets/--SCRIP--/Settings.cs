@@ -134,6 +134,11 @@ public class Settings : MonoBehaviour
     }
 
     // Methods for saving the settings on slider change
+
+    public void AutoSprintToggle(bool toggle)
+    {
+
+    }
     public void OnDeadzoneSliderChanged(float value)
     {
         PlayerPrefs.SetFloat("Deadzone Right", value);
