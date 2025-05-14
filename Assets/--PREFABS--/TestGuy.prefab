@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4101453873
+  GlobalObjectIdHash: 1382309427
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1383,8 +1383,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 1
-  m_DefaultControlScheme: Gamepad
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
@@ -15918,6 +15918,38 @@ PrefabInstance:
     - target: {fileID: 4058994865710174264, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
       propertyPath: m_Name
       value: MobileCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_ControlPath
+      value: <Gamepad>/rightStick
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_UseIsolatedInputActions
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_PointerDownAction.m_Name
+      value: Pointer Down
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_PointerMoveAction.m_Name
+      value: Pointer Move
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_PointerMoveAction.m_SingletonActionBindings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_PointerMoveAction.m_SingletonActionBindings.Array.data[0].m_Id
+      value: 5c1cda3b-2cde-4371-ac1e-de1651c2276e
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745458398530173494, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_PointerMoveAction.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Pointer Move
+      objectReference: {fileID: 0}
+    - target: {fileID: 7782815790344419554, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8709112383470182326, guid: 9fc52bcf2a69fb84f8a71f2ae7e1049e, type: 3}
       propertyPath: m_Pivot.x

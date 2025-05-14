@@ -21,6 +21,8 @@ public class CameraController : NetworkBehaviour
 
     private float xRotation;
     private float yRotation;
+    private float horizontalInput;
+    private float verticalInput;
 
     void Start()
     {
@@ -46,17 +48,23 @@ public class CameraController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
+        
+
+#if (UNITY_IOS || UNITY_ANDROID)
+        float xRotationInput = horizontalInput * controllerSensX * Time.deltaTime;
+        float yRotationInput = verticalInput * controllerSensY * Time.deltaTime;
+#else
+
         // Handle mouse and controller inputs for camera rotation
         float mouseX = Mouse.current.delta.x.ReadValue() * mouseSensX * Time.deltaTime;
         float mouseY = Mouse.current.delta.y.ReadValue() * mouseSensY * Time.deltaTime;
 
         float controllerX = (Gamepad.current == null) ? 0 : Gamepad.current.rightStick.x.ReadValue() * controllerSensX * Time.deltaTime;
         float controllerY = (Gamepad.current == null) ? 0 : Gamepad.current.rightStick.y.ReadValue() * controllerSensY * Time.deltaTime;
-
-
         // Combine both mouse and controller inputs for camera rotation
         float xRotationInput = (Gamepad.current == null) ? mouseX : controllerX;
         float yRotationInput = (Gamepad.current == null) ? mouseY : controllerY;
+#endif
 
         // Apply rotation limits
         xRotation -= yRotationInput;
@@ -124,5 +132,11 @@ public class CameraController : NetworkBehaviour
     public void DoTilt(float zTilt)
     {
         transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
+    }
+
+    public void OnLook(InputValue context)
+    {
+        horizontalInput = context.Get<Vector2>().x;
+        verticalInput = context.Get<Vector2>().y;
     }
 }
