@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ControlPath: <Gamepad>/rightShoulder
+  m_ControlPath: <Gamepad>/buttonEast
 --- !u!1 &3221438020215908313
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,9 +233,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7844039493740605591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1710, y: 340}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -280, y: 340}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &6708030865764291612
@@ -450,9 +450,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7844039493740605591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1270, y: 250}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -720, y: 250}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &7799970307909206379
@@ -535,10 +535,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2374176877693700165}
+  - {fileID: 7815230145267317825}
   - {fileID: 7545465264830076781}
   - {fileID: 4697466163300363802}
   - {fileID: 923066150046693594}
-  - {fileID: 7815230145267317825}
   - {fileID: 185461232199694956}
   - {fileID: 724160581749330928}
   - {fileID: 4711801846430856756}
@@ -582,9 +582,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7844039493740605591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1660, y: 750}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -330, y: -250}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &7469186029779109943
@@ -671,9 +671,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7844039493740605591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1490, y: 360}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -500, y: 360}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &2145958141553251504
@@ -760,9 +760,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7844039493740605591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1180, y: 60}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -810, y: 60}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &2298208993066338052
@@ -850,9 +850,9 @@ RectTransform:
   m_Father: {fileID: 7844039493740605591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1587, y: 108}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 1000, y: 0}
+  m_SizeDelta: {x: -1656.9, y: -630.52}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &1417431241088664759
 CanvasRenderer:
@@ -875,14 +875,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.3529412}
+  m_Color: {r: 0.6188679, g: 0.6188679, b: 0.6188679, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c953e99dba0f6994bb82df1431247e49, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cbc7aee3953542c4da7e55407ca7372b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -906,7 +906,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MovementRange: 100
   m_DynamicOriginRange: 100
-  m_ControlPath: <Gamepad>/rightStick
+  m_ControlPath: <Touchscreen>/delta
   m_Behaviour: 0
   m_UseIsolatedInputActions: 0
   m_PointerDownAction:
