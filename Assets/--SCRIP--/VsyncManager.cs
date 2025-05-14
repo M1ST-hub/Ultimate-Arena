@@ -1,3 +1,4 @@
+using Unity.Services.Core;
 using UnityEngine;
 
 public class VsyncManager : MonoBehaviour
@@ -17,8 +18,9 @@ public class VsyncManager : MonoBehaviour
             DontDestroyOnLoad(instance.gameObject);
         }
     }
-    void Start()
+    private async void Start()
     {
+        await UnityServices.InitializeAsync();
         QualitySettings.vSyncCount = 1;
         Application.targetFrameRate = 60;
     }
