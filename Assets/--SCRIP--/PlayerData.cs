@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 [System.Serializable]
 public class PlayerData
 {
@@ -31,7 +29,7 @@ public class PlayerData
         currentBanner = ownedBanners[1];
         playerName = "AnonymousPlayer";
         ownedIcons = new int[] { 1, 0 };
-        ownedBanners = new int[] { 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        ownedBanners = new int[] { 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 };
     }
 
 

@@ -83,7 +83,6 @@ public class Player : MonoBehaviour
             ownedIcons = data.ownedIcons;
         }
 
-        // Banners handling - no longer necessary, as SetBannerOwnership will handle the updates
         if (data.ownedBanners == null || data.ownedBanners.Length != 19)
         {
             ownedBanners = new int[19];
@@ -102,7 +101,7 @@ public class Player : MonoBehaviour
                                               // Example: Set some as owned by default
         }
 
-        ownedBanners[6] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
+        ownedBanners[0] = ownedBanners[7] = ownedBanners[9] = ownedBanners[13] = ownedBanners[17] = 1;
         currentBanner = data.currentBanner;
         playerName = data.playerName;
     }

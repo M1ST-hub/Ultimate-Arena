@@ -96,6 +96,8 @@ public class Settings : MonoBehaviour
     {
         if (camController != null)
         {
+            //PlayerPrefs.SetInt("AutoSprint", toggle ? 1 : 0);
+
             // Apply settings directly when slider values change
             if (sliderName == "Deadzone Right")
             {
@@ -137,7 +139,7 @@ public class Settings : MonoBehaviour
 
     public void AutoSprintToggle(bool toggle)
     {
-
+        PlayerPrefs.SetInt("AutoSprint", toggle ? 1 : 0);
     }
     public void OnDeadzoneSliderChanged(float value)
     {

@@ -96,12 +96,6 @@ public class ShopUIManager : MonoBehaviour
 
                 Debug.Log("Display content");
             }
-
-            /*if (Player.Instance.ownedBanners[item.itemID] == 1)
-            {
-                Debug.Log("owned all banners");
-                Player.Instance.ownedBanners[item.itemID] = 0;
-            }*/
         }
 
     }
