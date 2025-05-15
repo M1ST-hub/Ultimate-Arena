@@ -379,7 +379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MovementRange: 100
   m_DynamicOriginRange: 100
-  m_ControlPath: <Gamepad>/rightStick
+  m_ControlPath: <Pointer>/delta
   m_Behaviour: 0
   m_UseIsolatedInputActions: 0
   m_PointerDownAction:
