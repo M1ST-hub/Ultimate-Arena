@@ -131,6 +131,7 @@ public class PlayerController : NetworkBehaviour
             anim = GetComponent<Animator>();
             capCol = GetComponentInChildren<CapsuleCollider>();
             playerInput = GetComponent<PlayerInput>();
+            playerInput.neverAutoSwitchControlSchemes = false;
             pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
             rb.freezeRotation = true;
             readyToJump = true;
@@ -212,7 +213,13 @@ public class PlayerController : NetworkBehaviour
             }
             else
                 return;
-            Debug.DrawRay(orientation.position, orientation.forward * 3, Color.red);
+
+            if(Gamepad.current != null) { playerInput.SwitchCurrentControlScheme("Gamepad"); }
+            else
+            {
+                playerInput.SwitchCurrentControlScheme("KeyboardMouse");
+            }
+                Debug.DrawRay(orientation.position, orientation.forward * 3, Color.red);
         }
 
 
