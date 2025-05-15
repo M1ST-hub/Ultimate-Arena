@@ -217,7 +217,11 @@ public class PlayerController : NetworkBehaviour
             if(Gamepad.current != null) { playerInput.SwitchCurrentControlScheme("Gamepad"); }
             else
             {
+#if (UNITY_IOS || UNITY_ANDROID)
+
+#else
                 playerInput.SwitchCurrentControlScheme("KeyboardMouse");
+#endif
             }
                 Debug.DrawRay(orientation.position, orientation.forward * 3, Color.red);
         }
