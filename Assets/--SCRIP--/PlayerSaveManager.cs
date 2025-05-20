@@ -31,17 +31,17 @@ public static class PlayerSaveManager {
         }
         else
         {
-            Debug.LogError("Save file not foind in" +  path);
+            //Debug.LogError("Save file not foind in" +  path);
             PlayerData data = new PlayerData();
 
-            return null;
+            return data;
         }
     }
 
     [ContextMenu("DeletePlayer")]
     public static void DeletePlayer()
     {
-        string path = Application.persistentDataPath + "/ImprecisionData.dat";
+        string path = Application.persistentDataPath + "/player.fun";
         File.Delete(path);
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();

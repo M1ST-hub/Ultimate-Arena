@@ -174,6 +174,8 @@ public class PlayerController : NetworkBehaviour
 
             MyInput();
 
+            
+
             //handle drag
             if (grounded)
                 rb.linearDamping = groundDrag;
@@ -192,12 +194,14 @@ public class PlayerController : NetworkBehaviour
 
             if (GameManager.Instance.isGameStarted)
             {
+                Debug.Log(currentXp.Value);
                 if (isTagger)
                 {
                     taggedTime += Time.deltaTime;
                     netTaggedTime.Value = taggedTime;
 
                     int xpGain = Mathf.RoundToInt((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
+                    Debug.Log($"Tagged XP {xpGain}");
                     currentXp.Value += xpGain;
                 }
                 else
@@ -205,22 +209,27 @@ public class PlayerController : NetworkBehaviour
                     untaggedMult += Time.deltaTime;
                     untaggedTime += Time.deltaTime;
                     netUntaggedTime.Value = untaggedTime;
-
+                    
                     multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
                     int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
+                    Debug.Log($"Untagged XP {xpGain}");
                     currentXp.Value += xpGain;
                 }
             }
             else
                 return;
 
-            if(Gamepad.current != null) { playerInput.SwitchCurrentControlScheme("Gamepad"); }
+            if(Gamepad.current != null && playerInput.currentControlScheme != "Gamepad") 
+            { 
+                playerInput.SwitchCurrentControlScheme("Gamepad"); 
+
+            }
             else
             {
 #if (UNITY_IOS || UNITY_ANDROID)
 
 #else
-                playerInput.SwitchCurrentControlScheme("KeyboardMouse");
+                //playerInput.SwitchCurrentControlScheme("KeyboardMouse");
 #endif
             }
                 Debug.DrawRay(orientation.position, orientation.forward * 3, Color.red);
@@ -550,7 +559,7 @@ public class PlayerController : NetworkBehaviour
     {
         horizontalInput = context.Get<Vector2>().x;
         verticalInput = context.Get<Vector2>().y;
-        anim.SetFloat("HorizInp", horizontalInput, 0.02f, Time.deltaTime);
+        anim.SetFloat("HorzInp", horizontalInput, 0.02f, Time.deltaTime);
         anim.SetFloat("VertInp", verticalInput, 0.02f, Time.deltaTime);
     }
 

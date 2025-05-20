@@ -52,6 +52,7 @@ public class ExperienceManager : MonoBehaviour
         // Check if the active scene is the Main Menu scene
         if (scene.name == "MainMenu") // Replace "MainMenu" with your actual scene name
         {
+            totalExperience = Player.Instance.xp;
             // Assign the UI components when entering the Main Menu scene
             AssignUIComponents();
             UpdateLevel();    // Initially update the level
@@ -93,7 +94,6 @@ public class ExperienceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
     
     public void AddExperience(int amount)

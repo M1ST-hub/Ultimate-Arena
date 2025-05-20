@@ -83,7 +83,7 @@ public class Timer : NetworkBehaviour
 #if UNITY_EDITOR 
                 Clock.Value = 5;
 #else
-Clock.Value = 20;
+Clock.Value = 180;
 #endif
             }
             else
@@ -92,7 +92,7 @@ Clock.Value = 20;
 #if UNITY_EDITOR 
                 Clock.Value = 15;
 #else
-Clock.Value = 20;
+Clock.Value = 30;
 #endif
             }
         }

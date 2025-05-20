@@ -4,6 +4,8 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Services.Matchmaker.Models;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class GameManager : NetworkBehaviour
 {
@@ -193,7 +195,7 @@ public class GameManager : NetworkBehaviour
 
     void Update()
     {
-
+        
     }
 
 
@@ -234,6 +236,10 @@ public class GameManager : NetworkBehaviour
             player.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
         }
 
+       
+
+        isGameStarted = true;
+
         //Destroy(timmy);
 
         if (IsServer)
@@ -256,6 +262,8 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void GameEndRpc()
     {
+        Player.Instance.SavePlayer();
+        Player.Instance.SavePlayer();
         StartCoroutine(DelayedPlayerStats());
 
         if (players.Count == 0)
@@ -276,6 +284,8 @@ public class GameManager : NetworkBehaviour
             SaveXpFromPlayer(playerController);
         }
 
+        Player.Instance.SavePlayer();
+        Player.Instance.SavePlayer();
         GetPlayers();
 
         foreach (GameObject player in players)
@@ -306,7 +316,9 @@ public class GameManager : NetworkBehaviour
         {
             // Add the player's current XP to the global Player instance
             Player.Instance.xp += pc.currentXp.Value;
-
+            Player.Instance.xp += 50;
+            Debug.Log("kkoshiuo");
+            Debug.Log(pc.currentXp.Value);
             // Save the player's XP using the SavePlayer method (make sure this is set up to persist the data)
             Player.Instance.SavePlayer();
         }

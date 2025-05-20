@@ -25,13 +25,14 @@ public class Player : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadPlayer();
         }
 
     }
 
     private void Start()
     {
-        LoadPlayer();
+        
     }
 
     public void DeletePlayer()
@@ -62,7 +63,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Player data is null during load.");
+            //Debug.LogError("Player data is null during load.");
         }
 
         // Icons handling

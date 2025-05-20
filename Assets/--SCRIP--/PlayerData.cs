@@ -24,7 +24,7 @@ public class PlayerData
     public PlayerData()
     {
         level = 1;
-        xp = 0;
+        xp = 90;
         tokens = 0;
         currentBanner = ownedBanners[1];
         playerName = "AnonymousPlayer";

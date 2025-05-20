@@ -177,7 +177,6 @@ public class ShopUIManager : MonoBehaviour
             // Remove the item from the shop (i.e., repopulate the shop UI)
 
             Player.Instance.SavePlayer();
-            //Player.Instance.LoadPlayer();
             UpdateItemDisplay();
         }
         else

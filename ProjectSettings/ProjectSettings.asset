@@ -843,7 +843,7 @@ PlayerSettings:
     Standalone: DOTWEEN
     VisionOS: DOTWEEN
     WebGL: DOTWEEN
-    Windows Store Apps: DOTWEEN
+    Windows Store Apps: DOTWEEN;ENABLE_INPUT_SYSTEM;INPUT_SYSTEM_ENABLE_INPUT_USER
     XboxOne: DOTWEEN
     iPhone: DOTWEEN
     tvOS: DOTWEEN
