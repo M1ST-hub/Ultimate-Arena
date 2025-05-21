@@ -197,27 +197,21 @@ public class PlayerController : NetworkBehaviour
                 Debug.Log(currentXp.Value);
                 if (isTagger)
                 {
-                    // TAGGER LOGIC (steady XP gain, ~90 XP over 180s)
-                    float taggerXpRate = 0.5f; // 0.5 XP per second
-                    int xpGain = Mathf.RoundToInt(taggerXpRate * Time.deltaTime);
-                    Debug.Log($"Tagged XP {xpGain}");
-                    currentXp.Value += xpGain;
-
                     taggedTime += Time.deltaTime;
                     netTaggedTime.Value = taggedTime;
+
+                    int xpGain = Mathf.RoundToInt(taggerExp * (Time.deltaTime / 150));
+                    Debug.Log($"Tagged XP {xpGain}");
+                    currentXp.Value += xpGain;
                 }
                 else
                 {
-                    // UNTAGGED LOGIC (slower XP gain, capped multiplier)
                     untaggedMult += Time.deltaTime;
                     untaggedTime += Time.deltaTime;
                     netUntaggedTime.Value = untaggedTime;
-
-                    float surviveExp = 0.5f; // reduced from 1f to limit total XP
-                    float maxMultiplier = 2f; // multiplier caps at 2.0
-                    float multiplier = Mathf.Min(1f + (untaggedMult / 100f), maxMultiplier);
-
-                    int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
+                    
+                    //multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
+                    int xpGain = Mathf.RoundToInt(surviveExp * (Time.deltaTime / 130));
                     Debug.Log($"Untagged XP {xpGain}");
                     currentXp.Value += xpGain;
                 }
