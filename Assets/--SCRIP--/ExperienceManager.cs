@@ -147,7 +147,11 @@ public class ExperienceManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "MainMenu") // Replace "MainMenu" with your actual scene name
         {
-            int start = Mathf.Max(0, totalExperience - previousLevelsExp);  // Ensure start XP is not negative
+            int start;
+            if (currentLevel == 1)
+                start = totalExperience;
+            else
+                start = Mathf.Max(0, totalExperience - previousLevelsExp);  // Ensure start XP is not negative
             int end = Mathf.Max(0, nextLevelsExp - previousLevelsExp);      // Ensure end XP is not negative
 
             levelText.text = currentLevel.ToString();
