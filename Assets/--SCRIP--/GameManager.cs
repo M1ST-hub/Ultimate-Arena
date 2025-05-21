@@ -263,7 +263,6 @@ public class GameManager : NetworkBehaviour
     public void GameEndRpc()
     {
         Player.Instance.SavePlayer();
-        Player.Instance.SavePlayer();
         StartCoroutine(DelayedPlayerStats());
 
         if (players.Count == 0)
@@ -284,8 +283,6 @@ public class GameManager : NetworkBehaviour
             SaveXpFromPlayer(playerController);
         }
 
-        Player.Instance.SavePlayer();
-        Player.Instance.SavePlayer();
         GetPlayers();
 
         foreach (GameObject player in players)
@@ -358,6 +355,9 @@ public class GameManager : NetworkBehaviour
             if (pc != null)
             {
                 pc.mostTags = 0;
+                pc.currentXp.Value = 0;
+                pc.untaggedTime = 0f;
+                pc.taggedTime = 0f;
                 pc.netTaggedTime.Value = 0f;
                 pc.netUntaggedTime.Value = 0f;
             }

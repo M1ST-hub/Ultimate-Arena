@@ -200,7 +200,7 @@ public class PlayerController : NetworkBehaviour
                     taggedTime += Time.deltaTime;
                     netTaggedTime.Value = taggedTime;
 
-                    int xpGain = Mathf.RoundToInt((taggedTime * (4f / 6f)) * taggerExp * Time.deltaTime);
+                    int xpGain = Mathf.RoundToInt((taggedTime * (5f / 6f)) * taggerExp * Time.deltaTime);
                     Debug.Log($"Tagged XP {xpGain}");
                     currentXp.Value += xpGain;
                 }
