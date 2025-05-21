@@ -200,17 +200,17 @@ public class PlayerController : NetworkBehaviour
                     taggedTime += Time.deltaTime;
                     netTaggedTime.Value = taggedTime;
 
-                    int xpGain = Mathf.RoundToInt((taggedTime * (0.6f / 6f)) * taggerExp * Time.deltaTime);
+                    int xpGain = Mathf.RoundToInt((taggedTime * (4f / 6f)) * taggerExp * Time.deltaTime);
                     Debug.Log($"Tagged XP {xpGain}");
                     currentXp.Value += xpGain;
                 }
                 else
                 {
-                    untaggedMult += (Time.deltaTime / 1.3f);
+                    untaggedMult += Time.deltaTime;
                     untaggedTime += Time.deltaTime;
                     netUntaggedTime.Value = untaggedTime;
                     
-                    multiplier = Mathf.Min(0.3f + (untaggedMult / 13f), maxMultiplier);
+                    multiplier = Mathf.Min(1f + (untaggedMult / 10f), maxMultiplier);
                     int xpGain = Mathf.RoundToInt(surviveExp * multiplier * Time.deltaTime);
                     Debug.Log($"Untagged XP {xpGain}");
                     currentXp.Value += xpGain;
