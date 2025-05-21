@@ -433,6 +433,7 @@ public class GameManager : NetworkBehaviour
             timmy = Instantiate(preGameTimer, canvas.transform);
             timmy.GetComponent<NetworkObject>().Spawn();
             timmy.transform.SetParent(canvas.transform);
+            timmy.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -139);
         }
 
     }
@@ -445,6 +446,7 @@ public class GameManager : NetworkBehaviour
             playTime = Instantiate(gameTimer, canvas.transform);
             playTime.GetComponent<NetworkObject>().Spawn();
             playTime.transform.SetParent(canvas.transform);
+            playTime.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -80);
         }
 
     }
@@ -457,6 +459,7 @@ public class GameManager : NetworkBehaviour
             endTimer = Instantiate(postGameTimer, canvas.transform);
             endTimer.GetComponent<NetworkObject>().Spawn();
             endTimer.transform.SetParent(canvas.transform);
+            endTimer.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -139);
         }
     }
 
