@@ -6,11 +6,13 @@ using System.Collections;
 public class PlayerInputErrorWorkaround : MonoBehaviour
 {
     private PlayerInput playerInput;
+    public InputActionAsset inputActions;
     private InputDevice lastDeviceUsed;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
+        playerInput.actions = inputActions;
     }
 
     private void Start()
@@ -41,16 +43,21 @@ public class PlayerInputErrorWorkaround : MonoBehaviour
 
         if (Gamepad.current != null)
         {
+            InputSystem.AddDevice(Gamepad.current);
             SwitchToGamepad(Gamepad.current);
+            InputSystem.EnableDevice(Gamepad.current);
         }
         else if (Keyboard.current != null && Mouse.current != null)
         {
+            InputSystem.AddDevice(Keyboard.current);
             SwitchToKeyboardMouse();
+            InputSystem.EnableDevice(Keyboard.current);
         }
         else
         {
             Debug.LogWarning("No input devices detected.");
         }
+        InputSystem.Update();
     }
 
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
