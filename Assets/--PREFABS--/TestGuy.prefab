@@ -1163,8 +1163,8 @@ MonoBehaviour:
   body: {fileID: 2389734486427502412}
   head: {fileID: 8527534947209275200}
   scoreManager: {fileID: 0}
-  taggerExp: 7
-  surviveExp: 8
+  taggerExp: 5
+  surviveExp: 6
   untaggedTime: 0
   taggedTime: 0
   mostTags: 0
