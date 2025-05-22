@@ -30,7 +30,11 @@ public class CameraController : NetworkBehaviour
 
         if (IsOwner)
         {
-            Cursor.lockState = CursorLockMode.Locked;
+#if UNITY_IOS || UNITY_ANDROID
+            Cursor.lockState = CursorLockMode.None;
+#else
+        Cursor.lockState = CursorLockMode.Locked;
+#endif
             mainCamera.fieldOfView = PlayerPrefs.GetFloat("FOV", 80f);
             rightDeadzone = PlayerPrefs.GetFloat("Deadzone Right", 0.2f);
 
@@ -138,5 +142,11 @@ public class CameraController : NetworkBehaviour
     {
         horizontalInput = context.Get<Vector2>().x;
         verticalInput = context.Get<Vector2>().y;
+    }
+
+    public void LookInput(Vector2 context)
+    {
+        horizontalInput = context.x;
+        verticalInput = context.y;
     }
 }

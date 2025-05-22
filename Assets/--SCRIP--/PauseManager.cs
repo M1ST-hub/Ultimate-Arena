@@ -8,7 +8,12 @@ public class PauseManager : MonoBehaviour
 
     public void ResumeGame()
     {
-            Cursor.lockState = CursorLockMode.Locked;
+#if UNITY_IOS || UNITY_ANDROID
+        Cursor.lockState = CursorLockMode.None;
+#else
+        Cursor.lockState = CursorLockMode.Locked;
+#endif
+
             isPaused = false;
     }
 

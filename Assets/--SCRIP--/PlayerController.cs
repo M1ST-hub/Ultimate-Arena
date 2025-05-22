@@ -15,6 +15,7 @@ public class PlayerController : NetworkBehaviour
     public SkinnedMeshRenderer body;
     public SkinnedMeshRenderer head;
     public Scoring scoreManager;
+    public GameObject mobCon;
 
     public float taggerExp = 5f;
     public float surviveExp = 8f;
@@ -192,6 +193,12 @@ public class PlayerController : NetworkBehaviour
                 playerInput.SwitchCurrentActionMap("Player");
             }
 
+#if UNITY_IOS || UNITY_ANDROID
+            if (pauseManager.isPaused == false && mobCon.activeInHierarchy == false)
+            {
+                mobCon.SetActive(true);
+            }
+#endif
             if (GameManager.Instance.isGameStarted)
             {
                 Debug.Log(currentXp.Value);
@@ -308,15 +315,23 @@ public class PlayerController : NetworkBehaviour
 
             Cursor.lockState = CursorLockMode.None;
 
+            mobCon.SetActive(false);
+
             EventSystem.current.SetSelectedGameObject(pauseManager.resumeButton);
 
             playerInput.SwitchCurrentActionMap("UI");
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Locked;
+#if UNITY_IOS || UNITY_ANDROID
+            Cursor.lockState = CursorLockMode.None;
+#else
+        Cursor.lockState = CursorLockMode.Locked;
+#endif
 
             pause.transform.GetChild(0).gameObject.SetActive(false);
+
+            mobCon.SetActive(true);
 
             playerInput.SwitchCurrentActionMap("Player");
         }
@@ -563,10 +578,23 @@ public class PlayerController : NetworkBehaviour
         anim.SetFloat("VertInp", verticalInput, 0.02f, Time.deltaTime);
     }
 
+    public void MoveInput(Vector2 context)
+    {
+        horizontalInput = context.x;
+        verticalInput = context.y;
+        anim.SetFloat("HorzInp", horizontalInput, 0.02f, Time.deltaTime);
+        anim.SetFloat("VertInp", verticalInput, 0.02f, Time.deltaTime);
+    }
+
     public void OnJump(InputValue context)
     {
         jumping = context.isPressed;
 
+    }
+
+    public void JumpInput(bool conext)
+    {
+        jumping = conext;
     }
 
     public void OnSprint(InputValue context)
@@ -582,9 +610,28 @@ public class PlayerController : NetworkBehaviour
         anim.SetBool("isRunning", sprinting);
     }
 
+    public void SprintInput(bool context)
+    {
+        if (PlayerPrefs.GetInt("AutoSprint", 0) == 1)
+        {
+            sprinting = true;
+        }
+        else
+        {
+            sprinting = context;
+        }
+        anim.SetBool("isRunning", sprinting);
+    }
+
     public void OnCrouch(InputValue context)
     {
         crouching = context.isPressed;
+        anim.SetBool("isCrouching", crouching);
+    }
+
+    public void CrouchInput(bool context)
+    {
+        crouching = context;
         anim.SetBool("isCrouching", crouching);
     }
 
@@ -594,9 +641,20 @@ public class PlayerController : NetworkBehaviour
         anim.SetTrigger("tag");
     }
 
+    public void TagInput(bool context)
+    {
+        tagging = context;
+        anim.SetTrigger("tag");
+    }
+
     public void OnInteract(InputValue context)
     {
         interacting = context.isPressed;
+    }
+
+    public void InteractInput(bool context)
+    {
+        interacting = context;
     }
 
     public void OnSlide(InputValue context)
@@ -605,12 +663,28 @@ public class PlayerController : NetworkBehaviour
         anim.SetBool("isSliding", sliding);
     }
 
+    public void SlideInput(bool context)
+    {
+        sliding = context;
+        anim.SetBool("isSliding", sliding);
+    }
+
     public void OnScoreboard(InputValue context)
     {
         scoreboarding = context.isPressed;
     }
 
+    public void ScoreboardInput(bool context)
+    {
+        scoreboarding = context;
+    }
+
     public void OnPause(InputValue context)
+    {
+        Pause();
+    }
+
+    public void PauseInput(bool context)
     {
         Pause();
     }
