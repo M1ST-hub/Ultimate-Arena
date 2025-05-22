@@ -147,6 +147,11 @@ public class PlayerController : NetworkBehaviour
             pause = GameObject.FindWithTag("Pause");
 
         }
+        else
+        {
+            playerInput = GetComponent<PlayerInput>();
+            playerInput.enabled = false;
+        }
     }
 
     public override void OnNetworkSpawn()

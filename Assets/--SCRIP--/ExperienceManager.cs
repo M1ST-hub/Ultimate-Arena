@@ -124,14 +124,25 @@ public class ExperienceManager : MonoBehaviour
         previousLevelsExp = (int)experienceCurve.Evaluate(currentLevel);
         nextLevelsExp = (int)experienceCurve.Evaluate(currentLevel + 1);
 
-        // Check if we need to level up based on the total experience
-        while (totalExperience >= nextLevelsExp)
+        if (currentLevel == 1 && totalExperience >= 590)
         {
             currentLevel++;
             totalTokens += 600;
             previousLevelsExp = nextLevelsExp;
             nextLevelsExp = (int)experienceCurve.Evaluate(currentLevel + 1);
         }
+        else
+        {
+            // Check if we need to level up based on the total experience
+            while (totalExperience >= nextLevelsExp)
+            {
+                currentLevel++;
+                totalTokens += 600;
+                previousLevelsExp = nextLevelsExp;
+                nextLevelsExp = (int)experienceCurve.Evaluate(currentLevel + 1);
+            }
+        }
+    
 
         // Update the UI with the correct level and XP
         UpdateInterface();
@@ -149,7 +160,7 @@ public class ExperienceManager : MonoBehaviour
         {
             int start;
             if (currentLevel == 1)
-                start = totalExperience;
+                start = totalExperience-90;
             else
                 start = Mathf.Max(0, totalExperience - previousLevelsExp);  // Ensure start XP is not negative
             int end = Mathf.Max(0, nextLevelsExp - previousLevelsExp);      // Ensure end XP is not negative
